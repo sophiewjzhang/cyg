@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace dbsync.Abstractions
 {
-    public interface IUploader
+    public interface IDownloader
     {
-        Task UploadArtifacts();
+        Task<bool> DownloadArtifacts(bool unzipResults);
     }
 }
