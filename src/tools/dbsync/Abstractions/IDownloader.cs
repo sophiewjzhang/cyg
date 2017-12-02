@@ -7,6 +7,6 @@ namespace dbsync.Abstractions
 {
     public interface IDownloader
     {
-        Task<bool> DownloadArtifacts(bool unzipResults);
+        Task<bool> DownloadArtifactsAsync(bool unzipResults);
     }
 }

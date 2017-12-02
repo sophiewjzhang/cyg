@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
 using dbsync.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using dbsync.Downloader;
+using System.Threading.Tasks;
 
 namespace dbsync
 {
@@ -10,24 +13,40 @@ namespace dbsync
     {
         private static IConfigurationRoot Configuration { get; set; }
 
-        static void Main(string[] args)
+        static void SetupConfig(IServiceCollection sc)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
-            var downloaderConfig = configuration.GetSection("downloader").Get<DownloaderConfiguration>();
-            var fileSystemReaderConfig = configuration.GetSection("fileSystemReader").Get<FileSystemReaderConfiguration>();
-            var writerConfig = configuration.GetSection("writer").Get<DbWriterConfiguration>();
-
-            Console.ReadKey();
+            sc.AddSingleton(configuration.GetSection("downloader").Get<DownloaderConfiguration>());
+            sc.AddSingleton(configuration.GetSection("fileSystemReader").Get<FileSystemReaderConfiguration>());
+            sc.AddSingleton(configuration.GetSection("writer").Get<DbWriterConfiguration>());
         }
 
-        static void ConfigChanged(object o)
+        static void SetupLogging(IServiceCollection sc)
         {
-            Console.WriteLine("Config changed");
-            //((IChangeToken)o).RegisterChangeCallback(ConfigChanged, o);
+            sc.AddLogging();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Elasticsearch()
+                .CreateLogger();
+        }
+
+        static void Main(string[] args)
+        {
+            var sc = new ServiceCollection();
+
+            SetupConfig(sc);
+            SetupLogging(sc);
+
+            var sp = sc.BuildServiceProvider();
+
+            var downloader = new HttpDownloader(sp.GetService<DownloaderConfiguration>());
+            Task.Run(async () => {
+                Console.WriteLine($"Is download success: {await downloader.DownloadArtifactsAsync(true)}");
+            });
+            Console.ReadKey();
         }
     }
 }
