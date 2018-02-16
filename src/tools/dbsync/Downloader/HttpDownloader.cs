@@ -2,11 +2,9 @@
 using dbsync.Configuration;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace dbsync.Downloader
@@ -20,11 +18,11 @@ namespace dbsync.Downloader
             this.config = config;
         }
 
-        private string GetTodayFileName() => Path.Combine(config.TargetFolder, DateTime.Now.Date.ToString("mm-dd-yyyy"), "gtfs.zip");
+        private string GetTodayFileName() => Path.Combine(config.TargetFolder, DateTime.Now.Date.ToString("MM-dd-yyyy"), "gtfs.zip");
 
         private void Unzip()
         {
-            ZipFile.ExtractToDirectory(GetTodayFileName(), Path.GetDirectoryName(GetTodayFileName()));
+            ZipFile.ExtractToDirectory(GetTodayFileName(), Path.GetDirectoryName(GetTodayFileName()), true);
         }
 
         public async Task<bool> DownloadArtifactsAsync(bool unzipResults)
