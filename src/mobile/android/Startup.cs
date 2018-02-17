@@ -33,7 +33,7 @@ namespace android
         {
             var builder = new ContainerBuilder(); 
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().WithParameter("optionsAccessor", new MemoryCacheOptions());
-            builder.RegisterType<SQLitePersistentBlobCache>().As<IObjectBlobCache>();
+            BlobCache.ApplicationName = Configuration.CacheDatabaseName;
             builder.RegisterType<CacheService>().As<ICacheService>().WithParameter("inMemoryExpirationInHours", Configuration.InMemoryCacheExpirationInHours).WithParameter("permanentExpirationInDays", Configuration.PermanentCacheExpirationInDays);
             builder.RegisterType<RouteDataService>().As<IRouteDataService>().WithParameter("baseUrl", Configuration.ApiBaseUrl);
             builder.RegisterType<StopDataService>().As<IStopDataService>().WithParameter("baseUrl", Configuration.ApiBaseUrl);

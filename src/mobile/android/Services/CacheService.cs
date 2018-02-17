@@ -12,14 +12,12 @@ namespace android.Services
     public class CacheService : ICacheService
     {
         private IMemoryCache inMemoryCache;
-        private IObjectBlobCache persistentCache;
         private int inMemoryCacheExpirationInHours;
         private int permanentCacheExpirationInDays;
 
-        public CacheService(IMemoryCache inMemoryCache, IObjectBlobCache persistentCache, int inMemoryExpirationInHours, int permanentExpirationInDays)
+        public CacheService(IMemoryCache inMemoryCache, int inMemoryExpirationInHours, int permanentExpirationInDays)
         {
             this.inMemoryCache = inMemoryCache;
-            this.persistentCache = persistentCache;
             this.inMemoryCacheExpirationInHours = inMemoryExpirationInHours;
             this.permanentCacheExpirationInDays = permanentExpirationInDays;
         }
@@ -36,14 +34,20 @@ namespace android.Services
 
         public void AddEntitiesToPersistentCache<T>(string key, IEnumerable<T> entities)
         {
-            persistentCache.InsertObject(key, entities, TimeSpan.FromDays(permanentCacheExpirationInDays));
+            BlobCache.LocalMachine.InsertObject(key, entities, TimeSpan.FromDays(permanentCacheExpirationInDays));
         }
 
         public async Task<IEnumerable<T>> GetEntitiesFromPersistentCache<T>(string key)
         {
-            return await persistentCache.GetObject<IEnumerable<T>>(key).FirstOrDefaultAsync();
-
-
+            try
+            {
+                // TODO: redo with GetOrCreate - pass handler to load from API
+                return await BlobCache.LocalMachine.GetObject<IEnumerable<T>>(key).FirstOrDefaultAsync();
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
         }
     }
 }

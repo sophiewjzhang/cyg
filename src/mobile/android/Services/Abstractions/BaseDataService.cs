@@ -42,21 +42,26 @@ namespace android.Services.Abstractions
             }
         }
 
-        public async Task<IEnumerable<T>> GetAsync<T>(string key, string relativeUrl)
+        public async Task<IEnumerable<T>> GetCachedAsync<T>(string relativeUrl)
         {
-            var entities = GetEntitiesFromCache<T>(key);
+            var entities = GetEntitiesFromCache<T>(relativeUrl);
             if (entities == null)
             {
-                entities = await GetEntitiesFromPersistentCache<T>(key);
+                entities = await GetEntitiesFromPersistentCache<T>(relativeUrl);
                 if (entities == null)
                 {
-                    entities = await GetEntitiesFromApiAsync<T>(new Uri(baseUrl, relativeUrl));
-                    cacheService.AddEntitiesToPersistentCache<T>(key, entities);
+                    entities = await GetRemoteAsync<T>(relativeUrl);
+                    cacheService.AddEntitiesToPersistentCache<T>(relativeUrl, entities);
                 }
-                cacheService.AddEntitiesToInMemoryCache<T>(key, entities);
+                cacheService.AddEntitiesToInMemoryCache<T>(relativeUrl, entities);
                 return entities;
             }
             return entities;
+        }
+
+        public async Task<IEnumerable<T>> GetRemoteAsync<T>(string relativeUrl)
+        {
+            return await GetEntitiesFromApiAsync<T>(new Uri(baseUrl, relativeUrl));
         }
     }
 }
