@@ -16,7 +16,7 @@ namespace dbsync.Readers
     {
         private FileSystemReaderConfiguration config;
 
-        private string GetFullPath(string fileName) => Path.Combine(config.SourcePath, DateTime.Now.Date.AddDays(-1).ToString("MM-dd-yyyy"), fileName);
+        private string GetFullPath(string fileName) => Path.Combine(config.SourcePath, DateTime.Now.Date.ToString("MM-dd-yyyy"), fileName);
         private string RemoveUnderscores(string value) => value.Replace("_", "");
 
         public FileReader(FileSystemReaderConfiguration config)

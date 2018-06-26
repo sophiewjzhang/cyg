@@ -23,7 +23,7 @@ namespace dal
             using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                return await connection.QueryFirstAsync<Route>(@"select * from Routes where RouteId = @routeId", routeId);
+                return await connection.QueryFirstAsync<Route>(@"select * from Routes where RouteId like '%-' + @routeId", routeId);
             }
         }
 
@@ -41,7 +41,15 @@ namespace dal
             using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                return await connection.QueryAsync<Route>(@"select * from Routes where RouteType = 2");
+                return await connection.QueryAsync<Route>(@"select 
+                    RIGHT([RouteId], LEN([RouteId])-CHARINDEX('-', [RouteId])) RouteId
+                      ,[AgencyId]
+                      ,[RouteShortName]
+                      ,[RouteLongName]
+                      ,[RouteType]
+                      ,[RouteColor]
+                      ,[RouteTextColor] 
+                    from Routes where RouteType = 2");
             }
         }
     }

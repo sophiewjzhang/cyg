@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-//[assembly: Xamarin.Forms.Dependency (typeof (CacheService))]
 namespace android.Services
 {
     public class CacheService : ICacheService
@@ -42,7 +41,32 @@ namespace android.Services
             try
             {
                 // TODO: redo with GetOrCreate - pass handler to load from API
-                return await BlobCache.LocalMachine.GetObject<IEnumerable<T>>(key).FirstOrDefaultAsync();
+
+                var cache = BlobCache.LocalMachine.GetObject<IEnumerable<T>>(key);
+                return await cache.FirstOrDefaultAsync();
+            }
+            catch (KeyNotFoundException)
+            {
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public void AddObjectToUserCache<T>(string key, T obj)
+        {
+            BlobCache.UserAccount.InsertObject(key, obj);
+        }
+
+        public async Task<T> GetObjectFromUserCacheAsync<T>(string key) where T : class
+        {
+            try
+            {
+                // TODO: redo with GetOrCreate - pass handler to load from API
+                var cache = BlobCache.UserAccount.GetObject<T>(key);
+                return await cache.FirstOrDefaultAsync();
             }
             catch (KeyNotFoundException)
             {

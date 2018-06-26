@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <shape>
+      <solid android:color="#374232"/>
+    </shape>
+  </item>
+  <item>
+    <bitmap
+    android:src="@drawable/baseline_arrow_drop_down_white_24dp"
+    android:gravity="left"
+  />
+  </item>
+</layer-list>

@@ -52,27 +52,27 @@ namespace dbsync
             Task.Run(async () => {
                 try
                 {
-                    //Console.WriteLine($"Is download success: {await downloader.DownloadArtifactsAsync(true)}");
+                    Console.WriteLine($"Is download success: {await downloader.DownloadArtifactsAsync(true)}");
 
-                    //var stops = await reader.ReadAsync<Stop>("stops.txt");
-                    //Log.Information($"Read {stops.Rows.Count} objects from stops.txt");
-                    //await dbWriter.WriteAsync<Stop>(stops);
-                    //Log.Information($"Saved {stops.Rows.Count} stops to database");
+                    var stops = await reader.ReadAsync<Stop>("stops.txt");
+                    Console.WriteLine($"Read {stops.Rows.Count} objects from stops.txt");
+                    await dbWriter.WriteAsync<Stop>(stops);
+                    Console.WriteLine($"Saved {stops.Rows.Count} stops to database");
 
-                    //var trips = await reader.ReadAsync<Trip>("trips.txt");
-                    //Log.Information($"Read {trips.Rows.Count} objects from trips.txt");
-                    //await dbWriter.WriteAsync<Trip>(trips);
-                    //Log.Information($"Saved {trips.Rows.Count} trips to database");
+                    var trips = await reader.ReadAsync<Trip>("trips.txt");
+                    Console.WriteLine($"Read {trips.Rows.Count} objects from trips.txt");
+                    await dbWriter.WriteAsync<Trip>(trips);
+                    Console.WriteLine($"Saved {trips.Rows.Count} trips to database");
 
                     var stopTimes = await reader.ReadAsync<StopTime>("stop_times.txt");
-                    Log.Information($"Read {stopTimes.Rows.Count} objects from stop_times.txt");
+                    Console.WriteLine($"Read {stopTimes.Rows.Count} objects from stop_times.txt");
                     await dbWriter.WriteAsync<StopTime>(stopTimes);
-                    Log.Information($"Saved {stopTimes.Rows.Count} stopTimes to database");
+                    Console.WriteLine($"Saved {stopTimes.Rows.Count} stopTimes to database");
 
                     var routes = await reader.ReadAsync<Route>("routes.txt");
-                    Log.Information($"Read {routes.Rows.Count} objects from routes.txt");
+                    Console.WriteLine($"Read {routes.Rows.Count} objects from routes.txt");
                     await dbWriter.WriteAsync<Route>(routes);
-                    Log.Information($"Saved {routes.Rows.Count} routes to database");
+                    Console.WriteLine($"Saved {routes.Rows.Count} routes to database");
                 }
                 catch (Exception e)
                 {

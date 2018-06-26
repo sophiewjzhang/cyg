@@ -48,7 +48,7 @@ namespace dal
                 return await connection.QueryAsync<Stop>(@"select distinct s.* from Trips t
   inner join StopTimes st on st.TripId = t.TripId
   inner join Stops s on s.StopId = st.StopId
-  where RouteId = @routeId", new { routeId = routeId });
+  where RouteId like '%-' + @routeId", new { routeId = routeId });
             }
         }
 
@@ -72,7 +72,7 @@ namespace dal
                 return await connection.QueryAsync<Stop>(@"select distinct s.* from Trips t
   inner join StopTimes st on st.TripId = t.TripId
   inner join Stops s on s.StopId = st.StopId
-  where RouteId = @routeId 
+  where RouteId like '%-' + @routeId 
     and ServiceId = @date", new { routeId = routeId, date = date.ToString("yyyyMMdd") });
             }
         }

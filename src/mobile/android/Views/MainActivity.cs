@@ -1,102 +1,160 @@
-﻿using Android.App;
-using Android.OS;
-using DTO;
-using System.Collections.Generic;
+﻿using android.Exceptions;
+using android.extensions;
 using android.Services.Abstractions;
-using Autofac;
-using System.Net.Http;
-using System.Threading.Tasks;
+using android.Views;
+using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Views;
 using Android.Widget;
-using System.Linq;
+using Autofac;
+using models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace android
 {
-    [Activity(Label = "android", MainLauncher = true)]
-    public class MainActivity : Activity
+    [Activity(Label = "Settings")]
+    public class MainActivity : StopSpinnerActivity
     {
-        private IEnumerable<Route> routes = null;
-        private IEnumerable<Stop> stops = null;
+        private IList<SpinnerItem> routes = null;
         private IRouteDataService routeDataService;
-        private IStopDataService stopDataService;
-        private ITripDataService tripDataService;
-        private Spinner routeSpinner;
-        private Spinner fromSpinner;
-        private Spinner toSpinner;
-        private EditText date;
+        private IUserSettingsService userSettingsService;
+        private Spinner spinnerRoute;
+        private RadioButton showOnlyThreeCheckbox;
+        private RadioButton showAllCheckbox;
+        private CheckBox locationSwitchCheckBox;
         private Button searchButton;
-
-        private string selectedRouteId = null;
-        private Stop selectedFrom = null;
-        private Stop selectedTo = null;
+        private TextView textViewException;
+        private bool firstRun = true;
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             routeDataService = App.Container.Resolve<IRouteDataService>();
-            stopDataService = App.Container.Resolve<IStopDataService>();
-            tripDataService = App.Container.Resolve<ITripDataService>();
+            userSettingsService = App.Container.Resolve<IUserSettingsService>();
 
             SetContentView(Resource.Layout.Main);
 
-            routeSpinner = FindViewById<Spinner>(Resource.Id.spinner0);
-            routeSpinner.ItemSelected += async (s, e) => { await RouteSpinner_ItemSelected(s, e); };
+            base.InitControls(Save, false, useIds: true);
 
-            fromSpinner = FindViewById<Spinner>(Resource.Id.spinner1);
-            fromSpinner.ItemSelected += async (s1, e1) => { await FromSpinner_ItemSelected(s1, e1); };
+            settings = await userSettingsService.LoadUserSettings();
 
-            toSpinner = FindViewById<Spinner>(Resource.Id.spinner2);
-            toSpinner.ItemSelected += ToSpinner_ItemSelected;
+            textViewException = FindViewById<TextView>(Resource.Id.textViewNoInternet);
+            spinnerRoute = FindViewById<Spinner>(Resource.Id.spinnerRoute);
+            spinnerRoute.ItemSelected += async (s, e) => { await RouteSpinner_ItemSelected(s, e); };
 
-            date = FindViewById<EditText>(Resource.Id.editText1);
+            showOnlyThreeCheckbox = FindViewById<RadioButton>(Resource.Id.radioButton1);
+            showAllCheckbox = FindViewById<RadioButton>(Resource.Id.radioButton2);
+            // TODO: change with value of radioGroup
+            showOnlyThreeCheckbox.Checked = settings?.ShowOnlyThreeTrips ?? true;
+            showOnlyThreeCheckbox.CheckedChange += async (s1, e1) => { await Save(); };
+            showAllCheckbox.Checked = !showOnlyThreeCheckbox.Checked;
+            showAllCheckbox.CheckedChange += async (s1, e1) => { await Save(); };
+
+            locationSwitchCheckBox = FindViewById<CheckBox>(Resource.Id.checkBox1);
+            locationSwitchCheckBox.Checked = settings?.SwapDirectionBasedOnLocation ?? true;
+            locationSwitchCheckBox.CheckedChange += async (s1, e1) => { await Save(); };
 
             searchButton = FindViewById<Button>(Resource.Id.button1);
             searchButton.Click += async (t, e1) => { await SearchButton_Click(t, e1); };
+
+            var extra = Intent.GetStringExtra("action");
+            if (settings != null && extra != "edit")
+            {
+                var intent = new Intent(this, typeof(TripsActivity));
+                StartActivity(intent);
+            }
+            if (settings != null)
+            {
+                searchButton.Text = "Back";
+            }
 
             await LoadRoutes();
         }
 
         protected async Task LoadRoutes()
         {
-            routes = await routeDataService.GetRoutesAsync();
-            routeSpinner.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerDropDownItem, routes.Select(x => x.RouteLongName).ToArray());
+            try
+            {
+                loader.StartAnimation(animation);
+                routes = (await routeDataService.GetRoutesAsync()).Select(x => new SpinnerItem(x.RouteId, x.RouteLongName)).ToList();
+                loader.ClearAnimation();
+                this.AddRouteSpinnerItemsWithSelectedValue(spinnerRoute, routes, settings?.RouteId, viewId: Resource.Drawable.IdSpinner, defaultValueResourceId: Resource.String.select_route);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
         }
 
         private async Task RouteSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            selectedRouteId = routes.First(x => x.RouteLongName == routeSpinner.GetItemAtPosition(e.Position).ToString()).RouteId;
-
-            stops = await stopDataService.GetStopsByRoute(selectedRouteId);
-            fromSpinner.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerDropDownItem, stops.Select(x => x.StopName).ToArray());
-        }
-
-        private async Task FromSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            selectedFrom = stops.FirstOrDefault(x => x.StopName == fromSpinner.SelectedItem.ToString());
-
-            var spinner2Stops = stops.Where(x => x.StopName != fromSpinner.GetItemAtPosition(e.Position).ToString());
-            toSpinner.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerDropDownItem, spinner2Stops.Select(x => x.StopName).ToArray());
-        }
-
-        private void ToSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            selectedTo = stops.FirstOrDefault(x => x.StopName == toSpinner.SelectedItem.ToString());
-        }
-
-        private async Task SearchButton_Click(object sender, System.EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(selectedRouteId)
-                || selectedTo == null
-                || selectedFrom == null
-                || string.IsNullOrWhiteSpace(date?.Text))
+            HideError<GenericNoConnectionException>();
+            if (e.Position == 0 && settings?.RouteId == null)
             {
                 return;
             }
 
-            var to = stops.FirstOrDefault(x => x.StopName == toSpinner.SelectedItem.ToString());
-            var trips = await tripDataService.GetTripsFromTo(selectedRouteId, DateTime.Parse(date.Text), selectedFrom, selectedTo);
-            StartActivity(typeof(Trips));
+            var newValue = routes.FirstOrDefault(x => x.Value == spinnerRoute.SelectedItem.ToString()).Id;
+            if (settings?.RouteId == null)
+            {
+                this.AddRouteSpinnerItemsWithSelectedValue(spinnerRoute, routes, newValue, Resource.Drawable.IdSpinner);
+            }
+            if (settings == null)
+            {
+                settings = new UserSettings();
+            }
+            if (newValue != settings?.RouteId || firstRun)
+            {
+                firstRun = false;
+                var from = settings.RouteId == newValue ? settings.From : null;
+                var to = settings.RouteId == newValue ? settings.To : null;
+                settings.RouteId = newValue;
+                await InitStopSpinners(newValue, from, to);
+            }
+        }
+
+        private async Task SearchButton_Click(object sender, System.EventArgs e)
+        {
+            await Save();
+
+            var intent = new Intent(this, typeof(TripsActivity));
+            StartActivity(intent);
+        }
+
+        private async Task Save()
+        {
+            if (string.IsNullOrWhiteSpace(settings?.RouteId)
+                || settings?.To == null
+                || settings?.From == null)
+            {
+                return;
+            }
+
+            userSettingsService.SaveUserSettings(new UserSettings
+            {
+                RouteId = settings.RouteId,
+                From = settings.From,
+                To = settings.To,
+                ShowOnlyThreeTrips = showOnlyThreeCheckbox.Checked,
+                SwapDirectionBasedOnLocation = locationSwitchCheckBox.Checked
+            });
+        }
+
+        protected override void ShowError(Exception e)
+        {
+            textViewException.Text = e.Message;
+            textViewException.Visibility = ViewStates.Visible;
+        }
+
+        protected override void HideError<T>()
+        {
+            textViewException.Visibility = ViewStates.Gone;
+            textViewException.Text = "";
         }
     }
 }

@@ -29,5 +29,11 @@ namespace api.Controllers
             var result = await tripRepository.GetNextThreeTrips(fromId, toId, routeId);
             return Ok(result);
         }
+
+        [HttpGet("dates")]
+        public async Task<IActionResult> AvailableDates()
+        {
+            return Ok(await tripRepository.GetAvailableDates());
+        }
     }
 }

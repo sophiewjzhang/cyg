@@ -5,6 +5,9 @@ using Autofac;
 using System.IO;
 using Android.Runtime;
 using System;
+using System.Threading.Tasks;
+using Android.OS;
+using Android.Widget;
 
 namespace android
 {
@@ -22,9 +25,23 @@ namespace android
             base.OnCreate();
 
             var configuration = new ConfigurationBuilder()
-           .AddJsonFile(new ResourceFileProvider(), "android.appsettings.json", false, false).Build().Get<AndroidConfiguration>();
-            var startup = new Startup(configuration);
+            .AddJsonFile(new ResourceFileProvider(), "android.appsettings.json", false, false)
+            .Build()
+            .Get<AndroidConfiguration>();
+            var startup = new Startup(configuration, this);
             Container = startup.GetContainer();
+
+            // TODO: add logging
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+        }
+
+        private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
         }
     }
 }

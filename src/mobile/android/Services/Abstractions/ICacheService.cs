@@ -9,5 +9,7 @@ namespace android.Services.Abstractions
         void AddEntitiesToInMemoryCache<T>(string key, IEnumerable<T> entities);
         void AddEntitiesToPersistentCache<T>(string key, IEnumerable<T> entities);
         Task<IEnumerable<T>> GetEntitiesFromPersistentCache<T>(string key);
+        void AddObjectToUserCache<T>(string key, T obj);
+        Task<T> GetObjectFromUserCacheAsync<T>(string key) where T : class;
     }
 }

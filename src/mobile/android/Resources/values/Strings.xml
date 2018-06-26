@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Go Train Trips</string>
+  <string name="app_name">Go Schedules</string>
+  <string name="select_route">Select route</string>
+  <string name="select_from">Select from station</string>
+  <string name="select_to">Select to station</string>
 </resources>

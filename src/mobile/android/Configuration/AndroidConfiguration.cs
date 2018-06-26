@@ -7,6 +7,7 @@ namespace android.Configuration
         public string ApiBaseUrl { get; set; }
         public int PermanentCacheExpirationInDays { get; set; }
         public int InMemoryCacheExpirationInHours { get; set; }
+        public int ApiTimeoutInSeconds { get; set; }
         public string CacheDatabaseName { get; set; }
     }
 }

@@ -1,43 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Microsoft.Extensions.Configuration;
+﻿using Akavache;
 using android.Configuration;
-using Autofac;
-using android.Services.Abstractions;
 using android.Services;
+using android.Services.Abstractions;
+using Android.Content;
+using Android.Locations;
+using Autofac;
 using Microsoft.Extensions.Caching.Memory;
-using Akavache;
-using Akavache.Sqlite3;
+using System.Collections.Generic;
 
 namespace android
 {
     public class Startup
     {
-        public AndroidConfiguration Configuration { get; }
+        private readonly AndroidConfiguration configuration;
+        private readonly Context context;
 
-        public Startup(AndroidConfiguration configuration)
+        public Startup(AndroidConfiguration configuration, Context context)
         {
-            Configuration = configuration;
+            this.configuration = configuration;
+            this.context = context;
         }
 
         public IContainer GetContainer()
         {
-            var builder = new ContainerBuilder(); 
+            var builder = new ContainerBuilder();
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().WithParameter("optionsAccessor", new MemoryCacheOptions());
-            BlobCache.ApplicationName = Configuration.CacheDatabaseName;
-            builder.RegisterType<CacheService>().As<ICacheService>().WithParameter("inMemoryExpirationInHours", Configuration.InMemoryCacheExpirationInHours).WithParameter("permanentExpirationInDays", Configuration.PermanentCacheExpirationInDays);
-            builder.RegisterType<RouteDataService>().As<IRouteDataService>().WithParameter("baseUrl", Configuration.ApiBaseUrl);
-            builder.RegisterType<StopDataService>().As<IStopDataService>().WithParameter("baseUrl", Configuration.ApiBaseUrl);
-            builder.RegisterType<TripDataService>().As<ITripDataService>().WithParameter("baseUrl", Configuration.ApiBaseUrl);
+            BlobCache.ApplicationName = configuration.CacheDatabaseName;
+            builder.RegisterType<CacheService>().As<ICacheService>().WithParameter("inMemoryExpirationInHours", configuration.InMemoryCacheExpirationInHours).WithParameter("permanentExpirationInDays", configuration.PermanentCacheExpirationInDays);
+            builder.RegisterType<RouteDataService>().As<IRouteDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
+                .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
+            builder.RegisterType<StopDataService>().As<IStopDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
+                .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
+            builder.RegisterType<TripDataService>().As<ITripDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
+                .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
+            builder.RegisterType<UserSettingsService>().As<IUserSettingsService>();
+            builder.RegisterType<LocationService>().As<ILocationService>();
+            builder.RegisterInstance((LocationManager)context.GetSystemService(Context.LocationService));
             return builder.Build();
         }
     }

@@ -9,7 +9,7 @@ namespace android.Services
 {
     public class RouteDataService : BaseDataService, IRouteDataService
     {
-        public RouteDataService(ICacheService cacheService, string baseUrl) : base(cacheService, baseUrl)
+        public RouteDataService(ICacheService cacheService, string baseUrl, int apiTimeoutInSeconds) : base(cacheService, baseUrl, apiTimeoutInSeconds)
         {
         }
 

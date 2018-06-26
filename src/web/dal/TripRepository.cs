@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using Dapper;
+using System.Linq;
 
 namespace dal
 {
@@ -31,7 +32,7 @@ and st1.stopid = @fromId
 and st2.stopid = @toId
 and st1.StopSequence < st2.StopSequence
 and r.routetype = 2
-and r.routeid = @routeId
+and r.routeid like '%-' + @routeId
 and st1.DepartureTime > @time
 order by st1.ArrivalTime ASC", (from, to) => new TripFromTo
                 {
@@ -78,7 +79,7 @@ and st1.stopid = @fromId
 and st2.stopid = @toId
 and st1.StopSequence < st2.StopSequence
 and r.routetype = 2
-and r.routeid = @routeId
+and r.routeid like '%-' + @routeId
 order by st1.ArrivalTime ASC", (from, to) => new TripFromTo
                 {
                     From = from,
@@ -91,6 +92,15 @@ order by st1.ArrivalTime ASC", (from, to) => new TripFromTo
                     toId = toId
                 },
                 splitOn: "TripId");
+            }
+        }
+
+        public async Task<Tuple<DateTime, DateTime>> GetAvailableDates()
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                return (await connection.QueryAsync<DateTime, DateTime, Tuple<DateTime, DateTime>>("select min(convert(datetime, ServiceId)), max(convert(datetime, ServiceId)) from Trips", Tuple.Create, splitOn: "*")).First();
             }
         }
     }
