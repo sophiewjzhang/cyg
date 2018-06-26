@@ -76,35 +76,27 @@ namespace android
 
             spinnerRoute.ItemSelected += async (s, e) => { await RouteSpinner_ItemSelected(s, e); };
             loader.StartAnimation(animation);
-            var availableDates = await tripDataService.GetAvailableDates();
-            loader.ClearAnimation();
-
-            textViewDate.Click += (s, e) =>
+            try
             {
-                try
+                var availableDates = await tripDataService.GetAvailableDates();
+                loader.ClearAnimation();
+
+                textViewDate.Click += (s, e) =>
                 {
 
                     var dialog = new DatePickerDialogFragment(this, dateSelected, this, availableDates.Item1, availableDates.Item2);
                     dialog.Show(FragmentManager, "date");
-                }
-                catch (Exception ex)
+                };
+                textViewDate1.Click += (s, e) =>
                 {
-                    ShowError(ex);
-                }
-            };
-            textViewDate1.Click += (s, e) =>
-            {
-                try
-                {
-
                     var dialog = new DatePickerDialogFragment(this, dateSelected, this, availableDates.Item1, availableDates.Item2);
                     dialog.Show(FragmentManager, "date");
-                }
-                catch (Exception ex)
-                {
-                    ShowError(ex);
-                }
-            };
+                };
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
         }
 
         private void ButtonLeft_Click(object sender, EventArgs e)

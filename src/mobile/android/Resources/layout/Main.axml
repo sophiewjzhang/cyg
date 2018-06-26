@@ -93,20 +93,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:backgroundTint="@android:color/black"
         android:id="@+id/radioGroup">
         <RadioButton
             android:id="@+id/radioButton1"
             android:checked="true"
+            android:buttonTint="#374232"
             android:text="Show next three trips" />
         <RadioButton
             android:id="@+id/radioButton2"
+            android:buttonTint="#374232"
             android:text="Show all trips for the day" />
     </RadioGroup>
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:checked="true"
-        android:foreground="#000000"
+        android:buttonTint="#374232"
         android:layout_marginTop="20dp"
         android:id="@+id/checkBox1"
         android:text="Swap direction based on my location" />
