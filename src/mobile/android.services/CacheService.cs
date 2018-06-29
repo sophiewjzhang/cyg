@@ -1,6 +1,6 @@
 ﻿using Akavache;
-using android.Services.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
+using services.abstractions;
 using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;

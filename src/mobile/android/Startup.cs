@@ -1,12 +1,13 @@
 ﻿using Akavache;
 using android.Configuration;
+using android.services;
 using android.Services;
-using android.Services.Abstractions;
 using Android.Content;
 using Android.Locations;
 using Autofac;
 using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
+using services;
+using services.abstractions;
 
 namespace android
 {

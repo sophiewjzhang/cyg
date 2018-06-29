@@ -52,11 +52,17 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpinnerItem.cs" />
+    <Compile Include="TextViewExtensions.cs" />
+    <Compile Include="TripExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libs\dto\dto.csproj">
+      <Project>{5DF642D9-4275-4D9A-9F09-273B60443A24}</Project>
+      <Name>dto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\libs\utlis\utils.csproj">
       <Project>{E1CF9DFA-8478-43D0-A9DC-4357FD90A7C8}</Project>
       <Name>utils</Name>

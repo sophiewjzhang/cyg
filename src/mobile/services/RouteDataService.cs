@@ -1,11 +1,9 @@
-﻿using System;
+﻿using DTO;
+using services.abstractions;
 using System.Collections.Generic;
-using android.Services.Abstractions;
-using DTO;
 using System.Threading.Tasks;
-using android.Configuration;
 
-namespace android.Services
+namespace services
 {
     public class RouteDataService : BaseDataService, IRouteDataService
     {

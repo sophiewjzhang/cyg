@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace android.Services.Abstractions
+namespace services.abstractions
 {
     public interface ICacheService
     {

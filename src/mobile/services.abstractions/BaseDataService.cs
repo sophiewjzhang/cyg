@@ -1,8 +1,5 @@
-﻿using Akavache.Sqlite3;
-using android.Configuration;
-using android.Exceptions;
-using Newtonsoft.Json;
-using Polly;
+﻿using Newtonsoft.Json;
+using services.abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace android.Services.Abstractions
+namespace services.abstractions
 {
     public abstract class BaseDataService
     {

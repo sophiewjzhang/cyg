@@ -1,13 +1,13 @@
-﻿using android.Exceptions;
-using android.Services.Abstractions;
-using Android.Locations;
-using DTO;
+﻿using DTO;
+using models;
+using services.abstractions;
+using services.abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace android.Services
+namespace services
 {
     public class StopDataService : BaseDataService, IStopDataService
     {
@@ -35,7 +35,7 @@ namespace android.Services
 
         private double DistanceToStop(Location location, Stop stop)
         {
-            return locationService.GetDistance(location.Latitude, location.Longitude, stop.StopLat, stop.StopLon);
+            return locationService.GetDistance(location.Lat, location.Lon, stop.StopLat, stop.StopLon);
         }
     }
 }

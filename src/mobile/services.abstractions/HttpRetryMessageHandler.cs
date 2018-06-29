@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace android.Services
+namespace services.abstractions
 {
     public class HttpRetryMessageHandler : DelegatingHandler
     {

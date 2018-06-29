@@ -1,6 +1,4 @@
-﻿using android.Exceptions;
-using android.extensions;
-using android.Services.Abstractions;
+﻿using android.extensions;
 using android.Views;
 using Android.App;
 using Android.Content;
@@ -13,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using services.abstractions.Exceptions;
+using services.abstractions;
 
 namespace android
 {

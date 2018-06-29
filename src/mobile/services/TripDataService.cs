@@ -1,15 +1,11 @@
-﻿using android.Services.Abstractions;
-using DTO;
-using Newtonsoft.Json;
-using Polly;
+﻿using DTO;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using System.Linq;
+using services.abstractions;
 
-namespace android.Services
+namespace services
 {
     public class TripDataService : BaseDataService, ITripDataService
     {

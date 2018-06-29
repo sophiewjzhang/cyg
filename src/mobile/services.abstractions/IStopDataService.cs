@@ -1,10 +1,10 @@
-﻿using Android.Locations;
-using DTO;
+﻿using DTO;
+using models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace android.Services.Abstractions
+namespace services.abstractions
 {
     public interface IStopDataService
     {

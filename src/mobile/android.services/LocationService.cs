@@ -1,21 +1,19 @@
-﻿using android.Services.Abstractions;
-using Android.App;
-using Android.Locations;
-using System.Threading.Tasks;
+﻿using Android.Locations;
 using Android.OS;
 using Android.Runtime;
-using Android.Content;
+using services.abstractions;
+using services.abstractions.Exceptions;
 using System;
-using android.Exceptions;
+using System.Threading.Tasks;
 
-namespace android.Services
+namespace android.services
 {
     public class LocationService : Java.Lang.Object, ILocationListener, ILocationService
     {
         private LocationManager locationManager;
         private string locationProvider;
-        TaskCompletionSource<Location> tcs;
-        Action<Location> callback;
+        TaskCompletionSource<models.Location> tcs;
+        Action<models.Location> callback;
 
 
         public LocationService(LocationManager locationManager)
@@ -27,9 +25,9 @@ namespace android.Services
             }, true) ?? string.Empty;
         }
 
-        public Task<Location> GetCurrentLocation(Action<Location> callback)
+        public Task<models.Location> GetCurrentLocation(Action<models.Location> callback)
         {
-            tcs = new TaskCompletionSource<Location>();
+            tcs = new TaskCompletionSource<models.Location>();
             this.callback = callback;
 
             try
@@ -39,7 +37,11 @@ namespace android.Services
                 {
                     locationManager.RequestSingleUpdate(new Criteria { Accuracy = Accuracy.Fine }, this, null);
                 }
-                tcs.TrySetResult(location);
+                tcs.TrySetResult(new models.Location
+                {
+                    Lat = location.Latitude,
+                    Lon = location.Longitude
+                });
                 return tcs.Task;
             }
             catch (Exception)
@@ -58,8 +60,13 @@ namespace android.Services
 
         public void OnLocationChanged(Location location)
         {
-            tcs.TrySetResult(location);
-            callback(location);
+            var locationModel = new models.Location
+            {
+                Lat = location.Latitude,
+                Lon = location.Longitude
+            };
+            tcs.TrySetResult(locationModel);
+            callback(locationModel);
         }
 
         public void OnProviderDisabled(string provider)
