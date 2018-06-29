@@ -41,7 +41,7 @@ namespace dal
             using (var connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                return await connection.QueryAsync<Route>(@"select 
+                return await connection.QueryAsync<Route>(@"select distinct
                     RIGHT([RouteId], LEN([RouteId])-CHARINDEX('-', [RouteId])) RouteId
                       ,[AgencyId]
                       ,[RouteShortName]
@@ -49,7 +49,7 @@ namespace dal
                       ,[RouteType]
                       ,[RouteColor]
                       ,[RouteTextColor] 
-                    from Routes where RouteType = 2");
+                    from Routes where RouteType = 2 order by RouteId");
             }
         }
     }
