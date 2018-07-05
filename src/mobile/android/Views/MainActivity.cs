@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using services.abstractions.Exceptions;
 using services.abstractions;
+using android.Services;
 
 namespace android
 {
@@ -29,6 +30,7 @@ namespace android
         private Button searchButton;
         private TextView textViewException;
         private bool firstRun = true;
+        private float initialY;
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -155,6 +157,24 @@ namespace android
         {
             textViewException.Visibility = ViewStates.Gone;
             textViewException.Text = "";
+        }
+
+        public override bool DispatchTouchEvent(MotionEvent e)
+        {
+            switch (e.Action)
+            {
+                case MotionEventActions.Move:
+                    var diff = e.GetY() - initialY;
+                    if (diff > 1000)
+                    {
+                        CacheService.InvalidateCache();
+                    }
+                    break;
+                case MotionEventActions.Down:
+                    initialY = e.GetY();
+                    break;
+            }
+            return base.DispatchTouchEvent(e);
         }
     }
 }

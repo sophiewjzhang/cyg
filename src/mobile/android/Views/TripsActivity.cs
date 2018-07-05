@@ -160,7 +160,7 @@ namespace android
             {
                 IEnumerable<TripFromTo> trips;
                 loader.StartAnimation(animation);
-                if (settings.ShowOnlyThreeTrips)
+                if (settings.ShowOnlyThreeTrips && dateSelected.Date == DateTime.Now.Date)
                 {
                     trips = await tripDataService.GetNextThreeTrips(settings.RouteId, dateSelected, from, to);
                 }

@@ -11,5 +11,6 @@ namespace services.abstractions
         Task<IEnumerable<T>> GetEntitiesFromPersistentCache<T>(string key);
         void AddObjectToUserCache<T>(string key, T obj);
         Task<T> GetObjectFromUserCacheAsync<T>(string key) where T : class;
+        Task UpdateCacheStatusIfRequired();
     }
 }

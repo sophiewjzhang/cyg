@@ -28,17 +28,10 @@ namespace android.extensions
                     {
                         temporarySelectedItemPosition = position;
                     }
+                    return dropDownView;
                 }
-                else if (position == temporarySelectedItemPosition)
-                {
-                    textView.SetBackgroundColor(new Color(0x2a, 0x5c, 0x12));
-                }
-                else
-                {
-                    textView.SetBackgroundColor(new Color(0x37, 0x42, 0x32));
-                }
-                textView.SetTextSize(Android.Util.ComplexUnitType.Dip, 17);
-                textView.SetTextColor(Color.White);
+
+                textView.ApplyStopStyle(position == temporarySelectedItemPosition ? new Color(0x2a, 0x5c, 0x12) : new Color(0x37, 0x42, 0x32));
                 textView.SetPadding(20, 20, 20, 20);
                 return textView;
             }
@@ -49,11 +42,9 @@ namespace android.extensions
         {
             var inflater = (LayoutInflater)(Context.GetSystemService(Context.LayoutInflaterService));
             var mainText = inflater.Inflate(spinnerResourceId, parent, false) as TextView;
-            mainText.SetTextSize(Android.Util.ComplexUnitType.Dip, 17);
-            mainText.SetTextColor(Color.White);
 
             // test to minify size needed for station name
-            mainText.Text = GetItem(position).Value.Replace(" GO", "");
+            mainText.ApplyStopStyle(text: GetItem(position).Value.Replace(" GO", ""));
             mainText.Gravity = ((Spinner)parent).Gravity;
             var relativeLayout = ((RelativeLayout)parent.Parent);
             if (mainText.Text.Length > 17)

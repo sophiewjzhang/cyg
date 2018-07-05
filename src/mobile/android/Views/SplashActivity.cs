@@ -1,8 +1,14 @@
 ﻿
+using Akavache;
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
+using Autofac;
+using services.abstractions;
+using System;
+using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace android
@@ -11,16 +17,14 @@ namespace android
     public class SplashActivity : AppCompatActivity
     {
         static readonly string TAG = "X:" + typeof(SplashActivity).Name;
-
-        public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)
-        {
-            base.OnCreate(savedInstanceState, persistentState);
-        }
+        ICacheService cacheService;
 
         // Launches the startup task
-        protected override void OnResume()
+        protected async override void OnResume()
         {
             base.OnResume();
+            cacheService = App.Container.Resolve<ICacheService>();
+            await cacheService.UpdateCacheStatusIfRequired();
             Task startupWork = new Task(() => { Startup(); });
             startupWork.Start();
         }

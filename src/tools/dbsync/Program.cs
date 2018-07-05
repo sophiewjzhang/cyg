@@ -10,6 +10,7 @@ using dbsync.Readers;
 using DTO;
 using System.Linq;
 using dbsync.Writers;
+using System.Diagnostics;
 
 namespace dbsync
 {
@@ -52,27 +53,39 @@ namespace dbsync
             Task.Run(async () => {
                 try
                 {
-                    Console.WriteLine($"Is download success: {await downloader.DownloadArtifactsAsync(true)}");
+                    var sw = new Stopwatch();
+                    sw.Start();
+                    Console.WriteLine($"Is download success: {await downloader.DownloadArtifactsAsync(true)} in {sw.ElapsedMilliseconds} ms");
 
+                    sw.Restart();
                     var stops = await reader.ReadAsync<Stop>("stops.txt");
-                    Console.WriteLine($"Read {stops.Rows.Count} objects from stops.txt");
+                    Console.WriteLine($"Read {stops.Rows.Count} objects from stops.txt in {sw.ElapsedMilliseconds} ms");
                     await dbWriter.WriteAsync<Stop>(stops);
-                    Console.WriteLine($"Saved {stops.Rows.Count} stops to database");
+                    Console.WriteLine($"Saved {stops.Rows.Count} stops to databaset in {sw.ElapsedMilliseconds} ms");
 
+                    sw.Restart();
                     var trips = await reader.ReadAsync<Trip>("trips.txt");
-                    Console.WriteLine($"Read {trips.Rows.Count} objects from trips.txt");
+                    Console.WriteLine($"Read {trips.Rows.Count} objects from trips.txt in {sw.ElapsedMilliseconds} ms");
                     await dbWriter.WriteAsync<Trip>(trips);
-                    Console.WriteLine($"Saved {trips.Rows.Count} trips to database");
+                    Console.WriteLine($"Saved {trips.Rows.Count} trips to databaset in {sw.ElapsedMilliseconds} ms");
 
+                    sw.Restart();
                     var stopTimes = await reader.ReadAsync<StopTime>("stop_times.txt");
-                    Console.WriteLine($"Read {stopTimes.Rows.Count} objects from stop_times.txt");
-                    await dbWriter.WriteAsync<StopTime>(stopTimes);
-                    Console.WriteLine($"Saved {stopTimes.Rows.Count} stopTimes to database");
+                    ////var rows = stopTimes.Select("stop_id not in ('YO','WR','WH','WE','USBT','UN','UI','ST','SR','SC','RU','RO','RI','PO','PIN','PA','OS','OR','OL','OA','NE','MR','MP','MO','ML','MK','MJ','MI','ME','MA','LS','LO','LI','LA','KP','KI','KE','KC','HA','GU','GO','GL','GE','EX','ET','ER','EG','EA','DW','DI','DA','CO','CL','CE','BU','BR','BO','BL','BE','BD','BA','AU','AP','AL','AJ','AG','AD','AC','SCTH','NI')");
 
+                    ////for (int i = rows.Length - 1; i >= 0; i--)
+                    ////{
+                    ////    rows[i].Delete();
+                    ////}
+                    Console.WriteLine($"Read {stopTimes.Rows.Count} objects from stop_times.txt in {sw.ElapsedMilliseconds} ms");
+                    await dbWriter.WriteAsync<StopTime>(stopTimes);
+                    Console.WriteLine($"Saved {stopTimes.Rows.Count} stopTimes to database in {sw.ElapsedMilliseconds} ms");
+
+                    sw.Restart();
                     var routes = await reader.ReadAsync<Route>("routes.txt");
-                    Console.WriteLine($"Read {routes.Rows.Count} objects from routes.txt");
+                    Console.WriteLine($"Read {routes.Rows.Count} objects from routes.txt in {sw.ElapsedMilliseconds} ms");
                     await dbWriter.WriteAsync<Route>(routes);
-                    Console.WriteLine($"Saved {routes.Rows.Count} routes to database");
+                    Console.WriteLine($"Saved {routes.Rows.Count} routes to database in {sw.ElapsedMilliseconds} ms");
                 }
                 catch (Exception e)
                 {

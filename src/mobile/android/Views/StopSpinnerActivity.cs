@@ -1,7 +1,6 @@
 ﻿using android.extensions;
 using Android.App;
 using Android.Graphics;
-using Android.Locations;
 using Android.Views.Animations;
 using Android.Widget;
 using Autofac;

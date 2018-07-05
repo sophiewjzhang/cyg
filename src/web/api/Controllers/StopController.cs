@@ -14,6 +14,7 @@ namespace api.Controllers
             this.stopRepository = stopRepository;
         }
 
+        [ResponseCache()]
         public async Task<IActionResult> Index()
         {
             var result = await stopRepository.GetTrainStops();

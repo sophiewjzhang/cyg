@@ -22,7 +22,36 @@ namespace android.extensions
             return textView;
         }
 
-        public static int DpToPx(float dencity, int dp)
+        public static void ApplyStopStyle(this TextView textView, Color? background = null, string text = null)
+        {
+            if (text != null)
+            {
+                textView.Text = text;
+            }
+            if (background.HasValue)
+            {
+                textView.SetBackgroundColor(background.Value);
+            }
+            textView.SetTextSize(Android.Util.ComplexUnitType.Dip, 17);
+            textView.SetTextColor(Color.White);
+        }
+
+        public static void ApplyRouteStyle(this TextView textView, Color? background = null, string text = null)
+        {
+            if (text != null)
+            {
+                textView.Text = text;
+            }
+            if (background.HasValue)
+            {
+                textView.SetBackgroundColor(background.Value);
+            }
+            textView.SetTextSize(Android.Util.ComplexUnitType.Dip, 35);
+            textView.SetTextColor(Color.Black);
+            textView.SetElegantTextHeight(true);
+        }
+
+        private static int DpToPx(float dencity, int dp)
         {
             return (int)(dp * dencity + 0.5f);
         }
