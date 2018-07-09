@@ -54,13 +54,13 @@ namespace android.extensions
             else
             {
                 // TODO: do something with this shit
-                if (parent.Id == 2131230923)
+                if (parent.Id == 2131099770)
                 {
-                    relativeLayout.SetBackgroundResource(2130837780);
+                    relativeLayout.SetBackgroundResource(2130837605);
                 }
                 else
                 {
-                    relativeLayout.SetBackgroundResource(2130837779);
+                    relativeLayout.SetBackgroundResource(2130837606);
                 }
             }
 

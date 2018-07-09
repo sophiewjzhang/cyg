@@ -11,7 +11,6 @@ namespace services.abstractions
 {
     public abstract class BaseDataService
     {
-        public const int RetryCount = 5;
         private readonly ICacheService cacheService;
         protected readonly Uri baseUrl;
         protected readonly int apiTimeoutInSeconds;
