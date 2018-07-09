@@ -14,13 +14,13 @@ namespace android.extensions
             return Enumerable.Concat(new SpinnerItem[] { new SpinnerItem(string.Empty, context.Resources.GetString(defaultValueResourceId)) }, items).ToList();
         }
 
-        public static void AddStopSpinnerItemsWithSelectedValue(this Context context, Spinner spinner, IList<SpinnerItem> items, string selectedId, int viewId = Android.Resource.Layout.SimpleSpinnerItem, int defaultValueResourceId = -1)
+        public static void AddStopSpinnerItemsWithSelectedValue(this Context context, Spinner spinner, IList<SpinnerItem> items, string selectedId, int spinnerFromResourceId, int rightBackgroundResourceId, int leftBackgroundResourceId, int viewId = Android.Resource.Layout.SimpleSpinnerItem, int defaultValueResourceId = -1)
         {
             if (selectedId == null && defaultValueResourceId >= 0)
             {
                 items = GetItemsArrayWithDefaultValue(context, items, defaultValueResourceId);
             }
-            spinner.Adapter = new StopViewAdapter(context, viewId, items);
+            spinner.Adapter = new StopViewAdapter(context, viewId, items, spinnerFromResourceId, rightBackgroundResourceId, leftBackgroundResourceId);
             // weird bug with moving spinner 20 px if no PostDelayed
             if (selectedId != null)
             {

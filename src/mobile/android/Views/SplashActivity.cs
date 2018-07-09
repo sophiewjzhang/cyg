@@ -1,26 +1,23 @@
-﻿
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Support.V7.App;
+using Autofac;
+using services.abstractions;
 using System.Threading.Tasks;
 
 namespace android
 {
     [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
-    public class SplashActivity : AppCompatActivity
+    public class SplashActivity : Activity
     {
         static readonly string TAG = "X:" + typeof(SplashActivity).Name;
-
-        public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)
-        {
-            base.OnCreate(savedInstanceState, persistentState);
-        }
+        ICacheService cacheService;
 
         // Launches the startup task
-        protected override void OnResume()
+        protected async override void OnResume()
         {
             base.OnResume();
+            cacheService = App.Container.Resolve<ICacheService>();
+            await cacheService.UpdateCacheStatusIfRequired();
             Task startupWork = new Task(() => { Startup(); });
             startupWork.Start();
         }

@@ -1,15 +1,13 @@
-﻿using android.Exceptions;
-using android.extensions;
-using android.Services.Abstractions;
+﻿using android.extensions;
 using Android.App;
 using Android.Graphics;
-using Android.Locations;
-using Android.OS;
 using Android.Views.Animations;
 using Android.Widget;
 using Autofac;
 using DTO;
 using models;
+using services.abstractions;
+using services.abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,7 +113,7 @@ namespace android.Views
             return closerStop != null && closerStop.StopId != from;
         }
 
-        protected async void OnLocationChange(Location location)
+        protected async void OnLocationChange(models.Location location)
         {
             HideError<LocationIsNotAvailableException>();
             if (await IsSwitchRequiredBasedOnLocation(settings.From, settings.To))
@@ -177,7 +175,7 @@ namespace android.Views
             newItems.RemoveAll(x => x.Id == valueToExclude);
             if (this.useIds)
             {
-                this.AddStopSpinnerItemsWithSelectedValue(spinner, newItems, currentValue, Resource.Drawable.IdSpinner);
+                this.AddStopSpinnerItemsWithSelectedValue(spinner, newItems, currentValue, Resource.Id.spinnerFrom, Resource.Drawable.stop_spinner_bg_right, Resource.Drawable.stop_spinner_bg_left, Resource.Drawable.IdSpinner);
             }
             else
             {

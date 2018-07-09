@@ -48,7 +48,8 @@ namespace dal
                 return await connection.QueryAsync<Stop>(@"select distinct s.* from Trips t
   inner join StopTimes st on st.TripId = t.TripId
   inner join Stops s on s.StopId = st.StopId
-  where RouteId like '%-' + @routeId", new { routeId = routeId });
+  inner join Routes r on r.RouteId = t.RouteId
+  where r.RouteId in (select top 1 RouteId from Routes where RouteId like '%-' + @routeId)", new { routeId = routeId });
             }
         }
 

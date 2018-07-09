@@ -8,6 +8,9 @@ using System;
 using System.Threading.Tasks;
 using Android.OS;
 using Android.Widget;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Akavache;
 
 namespace android
 {
@@ -20,7 +23,7 @@ namespace android
         {
         }
 
-        public override void OnCreate()
+        public async override void OnCreate()
         {
             base.OnCreate();
 
@@ -30,6 +33,7 @@ namespace android
             .Get<AndroidConfiguration>();
             var startup = new Startup(configuration, this);
             Container = startup.GetContainer();
+
 
             // TODO: add logging
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;

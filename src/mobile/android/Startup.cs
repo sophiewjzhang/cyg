@@ -1,12 +1,13 @@
 ﻿using Akavache;
 using android.Configuration;
+using android.services;
 using android.Services;
-using android.Services.Abstractions;
 using Android.Content;
 using Android.Locations;
 using Autofac;
 using Microsoft.Extensions.Caching.Memory;
-using System.Collections.Generic;
+using services;
+using services.abstractions;
 
 namespace android
 {
@@ -26,7 +27,11 @@ namespace android
             var builder = new ContainerBuilder();
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().WithParameter("optionsAccessor", new MemoryCacheOptions());
             BlobCache.ApplicationName = configuration.CacheDatabaseName;
-            builder.RegisterType<CacheService>().As<ICacheService>().WithParameter("inMemoryExpirationInHours", configuration.InMemoryCacheExpirationInHours).WithParameter("permanentExpirationInDays", configuration.PermanentCacheExpirationInDays);
+            builder.RegisterType<CacheService>().As<ICacheService>()
+                .WithParameter("inMemoryExpirationInHours", configuration.InMemoryCacheExpirationInHours)
+                .WithParameter("permanentExpirationInDays", configuration.PermanentCacheExpirationInDays)
+                .WithParameter("baseUrl", configuration.ApiBaseUrl)
+                .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
             builder.RegisterType<RouteDataService>().As<IRouteDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
                 .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
             builder.RegisterType<StopDataService>().As<IStopDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)

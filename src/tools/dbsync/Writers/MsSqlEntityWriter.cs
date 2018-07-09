@@ -42,7 +42,7 @@ namespace dbsync.Writers
                 using (var connection = new SqlConnection(configuration.TargetConnectionString))
                 {
                     await connection.OpenAsync();
-                    using (var transaction = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(10), TransactionScopeAsyncFlowOption.Enabled))
+                    using (var transaction = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(60), TransactionScopeAsyncFlowOption.Enabled))
                     {
                         await connection.DeleteAllAsync<T>();
                         using (var sqlBulkCopy = new SqlBulkCopy(connection))
@@ -53,7 +53,7 @@ namespace dbsync.Writers
                                 var dataColumn = (DataColumn)column;
                                 sqlBulkCopy.ColumnMappings.Add(dataColumn.ColumnName, ConvertToPascalCase(dataColumn.ColumnName));
                             }
-                            // TODO: switch dapper to use singular Stop vs Stops
+                            // TODO: switch dapper to use singular Stop vs Stops                                                                                                                                                                                       
                             sqlBulkCopy.DestinationTableName = $"{typeof(T).Name}s";
                             await sqlBulkCopy.WriteToServerAsync(data);
                         }
@@ -64,6 +64,11 @@ namespace dbsync.Writers
             {
                 throw;
             }
+        }
+
+        internal Task WriteAsync<T>(object where)
+        {
+            throw new NotImplementedException();
         }
     }
 }

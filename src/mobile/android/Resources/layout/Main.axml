@@ -2,125 +2,75 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="25px"
-    android:minHeight="25px">
-  <TextView xmlns:a="http://schemas.android.com/tools"
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent"
-      android:text=""
-      android:background="#ffcccc"
-      android:visibility="gone"
-      android:id="@+id/textViewNoInternet"/>
-  <TextView
+    android:layout_height="match_parent">
+    <TextView xmlns:a="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text=""
+        android:background="#ffcccc"
+        android:visibility="gone"
+        android:id="@+id/textViewNoInternet" />
+    <TextView
         android:text="Select your favorite trip"
         android:layout_width="match_parent"
         android:textColor="#ffffff"
-        android:padding="30px"
+        android:padding="15dp"
         android:background="#374232"
         android:layout_height="wrap_content"
         android:id="@+id/textView0" />
-  <RelativeLayout
-  android:layout_width="match_parent"
-  android:background="#c8f3ba"
-  android:paddingRight="40px"
-  android:layout_height="wrap_content">
-    <Spinner
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="40px"
-        android:backgroundTint="@android:color/black"
-        android:id="@+id/spinnerRoute" />
-  </RelativeLayout>
-  <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:minWidth="25px"
-      android:minHeight="25px">
-    <RelativeLayout
-      android:layout_width="0dp"
-      android:layout_weight="0.45"
-      android:background="@drawable/stop_spinner_bg_left"
-      android:layout_height="wrap_content">
-      <Spinner
-          android:layout_width="match_parent"
-          android:layout_height="70px"
-          android:paddingLeft="20px"
-          android:paddingTop="10px"
-          android:backgroundTint="@android:color/white"
-          android:background="@null"
-          android:paddingBottom="10px"
-          android:minHeight="0dp"
-          android:gravity="left"
-          android:textAlignment="textStart"
-          android:minWidth="0dp"
-          android:id="@+id/spinnerFrom" />
+        android:background="#c8f3ba"
+        android:paddingRight="20dp"
+        android:layout_height="wrap_content">
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:backgroundTint="@android:color/black"
+            android:id="@+id/spinnerRoute" />
     </RelativeLayout>
-    <ImageButton
-              android:layout_width="70px"
-              android:layout_height="70px"
-              android:id="@+id/buttonSwitch"
-              android:padding="10px"
-              android:background="#2a5c12"
-              android:minHeight="0dp"
-              android:src="@drawable/switchIcon"
-              android:scaleType="fitXY"
-              android:minWidth="0dp" />
-    <RelativeLayout
-      android:layout_width="0dp"
-      android:layout_weight="0.45"
-      android:background="@drawable/stop_spinner_bg_right"
-      android:layout_height="wrap_content">
-      <Spinner
-          android:layout_width="match_parent"
-          android:layout_height="70px"
-          android:backgroundTint="@android:color/white"
-          android:background="@null"
-          android:gravity="right"
-          android:textAlignment="viewEnd"
-          android:minHeight="0dp"
-          android:minWidth="0dp"
-          android:paddingRight="20px"
-          android:paddingTop="10px"
-          android:paddingBottom="10px"
-          android:id="@+id/spinnerTo" />
-    </RelativeLayout>
-  </LinearLayout>
+  
+  <include layout="@layout/StopSpinners"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
   <TextView
-    android:layout_height="10px"
-    android:layout_width="100px"
-    android:background="#2a5c12"
-    android:id="@+id/loader"
-    android:visibility="invisible"
-        />
-  <RadioGroup
+        android:layout_height="5dp"
+        android:layout_width="50dp"
+        android:background="#2a5c12"
+        android:id="@+id/loader"
+        android:visibility="invisible" />
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40px"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@android:color/black"
         android:id="@+id/radioGroup">
-    <RadioButton
-        android:id="@+id/radioButton1"
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:checked="true"
+            android:buttonTint="#374232"
+            android:text="Show next three trips" />
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:buttonTint="#374232"
+            android:text="Show all trips for the day" />
+    </RadioGroup>
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:checked="true"
-        android:text="Show next three trips" />
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:text="Show all trips for the day" />
-  </RadioGroup>
-  <CheckBox
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:checked="true"
-      android:foreground="#000000"
-      android:layout_marginTop="40px"
-      android:id="@+id/checkBox1"
-      android:text="Swap direction based on my location" />
-  <Button
-      android:text="Show trips"
-      android:layout_width="match_parent"
-      android:layout_marginTop="40px"
-      android:layout_height="wrap_content"
-      android:background="#374232"
-      android:textColor="#ffffff"
-      android:id="@+id/button1" />
+        android:buttonTint="#374232"
+        android:layout_marginTop="20dp"
+        android:id="@+id/checkBox1"
+        android:text="Swap direction based on my location" />
+    <Button
+        android:text="Show trips"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:background="#374232"
+        android:textColor="#ffffff"
+        android:id="@+id/button1" />
 </LinearLayout>

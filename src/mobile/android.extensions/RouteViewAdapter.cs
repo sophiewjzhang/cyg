@@ -29,15 +29,10 @@ namespace android.extensions
                         parentSpinnerWidth = parentSpinner.Width;
                     }
                 }
-                else if (position == temporarySelectedItemPosition)
-                {
-                    textView.SetBackgroundColor(new Color(0xc8, 0xf3, 0xba));
-                }
+
+                textView.ApplyRouteStyle(position == temporarySelectedItemPosition ? new Color(0xc8, 0xf3, 0xba) : (Color?)null);
                 textView.SetWidth(parentSpinnerWidth);
                 textView.SetPadding(40, 0, 0, 0);
-                textView.SetTextColor(Color.Black);
-                textView.SetTextSize(Android.Util.ComplexUnitType.Dip, 35);
-                textView.SetElegantTextHeight(true);
                 return textView;
             }
             return dropDownView;
@@ -47,10 +42,7 @@ namespace android.extensions
         {
             var inflater = (LayoutInflater)(Context.GetSystemService(Context.LayoutInflaterService));
             var mainText = inflater.Inflate(spinnerResourceId, parent, false) as TextView;
-            mainText.TextSize = 35f;
-            mainText.SetTextColor(Color.Black);
-            mainText.Text = GetItem(position).Value;
-
+            mainText.ApplyRouteStyle(text: GetItem(position).Value);
             return mainText;
         }
     }
