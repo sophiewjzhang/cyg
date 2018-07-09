@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace android
 {
     [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true)]
-    public class SplashActivity : AppCompatActivity
+    public class SplashActivity : Activity
     {
         static readonly string TAG = "X:" + typeof(SplashActivity).Name;
         ICacheService cacheService;
