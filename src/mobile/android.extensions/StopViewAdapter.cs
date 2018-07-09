@@ -9,10 +9,15 @@ namespace android.extensions
 {
     public class StopViewAdapter : BaseViewAdapter
     {
-        private static Dictionary<string, Drawable> backgrounds = new Dictionary<string, Drawable>();
+        private int spinnerFromResourceId;
+        private int rightBackgroundResourceId;
+        private int leftBackgroundResourceId;
 
-        public StopViewAdapter(Context ctx, int resourceId, IList<SpinnerItem> objects) : base(ctx, resourceId, objects)
+        public StopViewAdapter(Context ctx, int resourceId, IList<SpinnerItem> objects, int spinnerFromResourceId, int rightBackgroundResourceId, int leftBackgroundResourceId) : base(ctx, resourceId, objects)
         {
+            this.spinnerFromResourceId = spinnerFromResourceId;
+            this.rightBackgroundResourceId = rightBackgroundResourceId;
+            this.leftBackgroundResourceId = leftBackgroundResourceId;
         }
 
         public override View GetDropDownView(int position, View convertView, ViewGroup parent)
@@ -54,13 +59,13 @@ namespace android.extensions
             else
             {
                 // TODO: do something with this shit
-                if (parent.Id == 2131099770)
+                if (parent.Id == spinnerFromResourceId)
                 {
-                    relativeLayout.SetBackgroundResource(2130837605);
+                    relativeLayout.SetBackgroundResource(leftBackgroundResourceId);
                 }
                 else
                 {
-                    relativeLayout.SetBackgroundResource(2130837606);
+                    relativeLayout.SetBackgroundResource(rightBackgroundResourceId);
                 }
             }
 

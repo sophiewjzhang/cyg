@@ -175,7 +175,7 @@ namespace android.Views
             newItems.RemoveAll(x => x.Id == valueToExclude);
             if (this.useIds)
             {
-                this.AddStopSpinnerItemsWithSelectedValue(spinner, newItems, currentValue, Resource.Drawable.IdSpinner);
+                this.AddStopSpinnerItemsWithSelectedValue(spinner, newItems, currentValue, Resource.Id.spinnerFrom, Resource.Drawable.stop_spinner_bg_right, Resource.Drawable.stop_spinner_bg_left, Resource.Drawable.IdSpinner);
             }
             else
             {

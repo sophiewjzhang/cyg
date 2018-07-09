@@ -5,7 +5,7 @@
   <style name="MyTheme" parent="MyTheme.Base">
   </style>
 
-  <style name="MyTheme.Splash" parent ="Theme.AppCompat.Light.NoActionBar">
+  <style name="MyTheme.Splash" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="android:windowBackground">@drawable/splash</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowFullscreen">true</item>
