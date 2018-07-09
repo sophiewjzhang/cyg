@@ -1,14 +1,7 @@
-﻿
-using Akavache;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Support.V7.App;
 using Autofac;
 using services.abstractions;
-using System;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace android
