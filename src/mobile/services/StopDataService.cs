@@ -23,9 +23,12 @@ namespace services
             return await GetCachedAsync<Stop>($"stop/{routeId}");
         }
 
-        public async Task<Stop> GetCloserStop(IEnumerable<Stop> stops, Action<Location> callback)
+        public async Task<Stop> GetCloserStop(IEnumerable<Stop> stops, Action<Location> callback, Location location = null)
         {
-            var location = await locationService.GetCurrentLocation(callback);
+            if (location == null)
+            {
+                location = await locationService.GetCurrentLocation(callback);
+            }
             if (location == null)
             {
                 throw new LocationIsNotAvailableException();

@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "models", "..\libs\models\mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "utils", "..\libs\utlis\utils.csproj", "{E1CF9DFA-8478-43D0-A9DC-4357FD90A7C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "services", "services\services.csproj", "{AE5A3309-3ECC-4B0F-88A6-6E04B3864989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "services", "services\services.csproj", "{AE5A3309-3ECC-4B0F-88A6-6E04B3864989}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "android.services", "android.services\android.services.csproj", "{87ED9B65-56B9-4A06-BC49-D3D94C767007}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "services.abstractions", "services.abstractions\services.abstractions.csproj", "{491A161F-1AD1-46D6-9E87-370EE051BDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "services.abstractions", "services.abstractions\services.abstractions.csproj", "{491A161F-1AD1-46D6-9E87-370EE051BDA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

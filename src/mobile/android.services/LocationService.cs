@@ -15,7 +15,6 @@ namespace android.services
         TaskCompletionSource<models.Location> tcs;
         Action<models.Location> callback;
 
-
         public LocationService(LocationManager locationManager)
         {
             this.locationManager = locationManager;
@@ -23,6 +22,12 @@ namespace android.services
             {
                 Accuracy = Accuracy.Fine
             }, true) ?? string.Empty;
+        }
+
+        private static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            return origin.AddMilliseconds(timestamp).ToLocalTime();
         }
 
         public Task<models.Location> GetCurrentLocation(Action<models.Location> callback)
@@ -33,15 +38,17 @@ namespace android.services
             try
             {
                 var location = locationManager.GetLastKnownLocation(locationProvider);
-                if (location == null)
+                if (location == null || ConvertFromUnixTimestamp(location.Time) < DateTime.Now.AddHours(-1))
                 {
                     locationManager.RequestSingleUpdate(new Criteria { Accuracy = Accuracy.Fine }, this, null);
                 }
-                tcs.TrySetResult(new models.Location
-                {
-                    Lat = location.Latitude,
-                    Lon = location.Longitude
-                });
+
+                if (location != null)
+                    tcs.TrySetResult(new models.Location
+                    {
+                        Lat = location.Latitude,
+                        Lon = location.Longitude
+                    });
                 return tcs.Task;
             }
             catch (Exception)

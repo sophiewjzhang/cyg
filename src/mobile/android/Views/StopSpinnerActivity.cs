@@ -80,7 +80,7 @@ namespace android.Views
                         HideError<LocationIsNotAvailableException>();
                         if (await IsSwitchRequiredBasedOnLocation(from, to))
                         {
-                            var temp = to.ToString();
+                            var temp = to;
                             to = from;
                             from = temp;
                         }
@@ -105,10 +105,10 @@ namespace android.Views
             }
         }
 
-        private async Task<bool> IsSwitchRequiredBasedOnLocation(string from, string to)
+        private async Task<bool> IsSwitchRequiredBasedOnLocation(string from, string to, Location location = null)
         {
             loader.StartAnimation(animation);
-            var closerStop = await stopDataService.GetCloserStop(stopModels.Where(x => x.StopId == from || x.StopId == to), OnLocationChange);
+            var closerStop = await stopDataService.GetCloserStop(stopModels.Where(x => x.StopId == from || x.StopId == to), OnLocationChange, location);
             loader.ClearAnimation();
             return closerStop != null && closerStop.StopId != from;
         }
@@ -116,7 +116,7 @@ namespace android.Views
         protected async void OnLocationChange(models.Location location)
         {
             HideError<LocationIsNotAvailableException>();
-            if (await IsSwitchRequiredBasedOnLocation(settings.From, settings.To))
+            if (await IsSwitchRequiredBasedOnLocation(settings.From, settings.To, location))
             {
                 await ButtonSwitch_Click(null, null);
             }
