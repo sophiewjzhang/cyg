@@ -97,7 +97,7 @@ namespace android.Views
                 SyncSpinner(spinnerTo, settings.To, settings.From);
                 SyncSpinner(spinnerFrom, settings.From, settings.To);
 
-                await spinnerSelect();//await ShowTrips();
+                await spinnerSelect();
             }
             catch (Exception ex)
             {

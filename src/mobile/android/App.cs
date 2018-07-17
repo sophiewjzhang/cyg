@@ -1,16 +1,10 @@
 ﻿using android.Configuration;
 using Android.App;
-using Microsoft.Extensions.Configuration;
-using Autofac;
-using System.IO;
 using Android.Runtime;
+using Autofac;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
-using Android.OS;
-using Android.Widget;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Akavache;
 
 namespace android
 {

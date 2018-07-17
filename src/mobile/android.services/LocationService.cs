@@ -10,18 +10,13 @@ namespace android.services
 {
     public class LocationService : Java.Lang.Object, ILocationListener, ILocationService
     {
-        private LocationManager locationManager;
-        private string locationProvider;
+        private readonly LocationManager locationManager;
         TaskCompletionSource<models.Location> tcs;
         Action<models.Location> callback;
 
         public LocationService(LocationManager locationManager)
         {
             this.locationManager = locationManager;
-            locationProvider = locationManager.GetBestProvider(new Criteria
-            {
-                Accuracy = Accuracy.Fine
-            }, true) ?? string.Empty;
         }
 
         private static DateTime ConvertFromUnixTimestamp(double timestamp)
@@ -30,32 +25,35 @@ namespace android.services
             return origin.AddMilliseconds(timestamp).ToLocalTime();
         }
 
-        public Task<models.Location> GetCurrentLocation(Action<models.Location> callback)
+        public async Task<models.Location> GetCurrentLocation(Action<models.Location> callback)
         {
-            tcs = new TaskCompletionSource<models.Location>();
             this.callback = callback;
 
             try
             {
-                var location = locationManager.GetLastKnownLocation(locationProvider);
+                if (!locationManager.IsProviderEnabled("gps"))
+                {
+                    throw new LocationIsNotAvailableException();
+                }
+                var location = locationManager.GetLastKnownLocation("gps");
                 if (location == null || ConvertFromUnixTimestamp(location.Time) < DateTime.Now.AddHours(-1))
                 {
-                    locationManager.RequestSingleUpdate(new Criteria { Accuracy = Accuracy.Fine }, this, null);
+                    locationManager.RequestSingleUpdate("gps", this, null);
                 }
 
-                if (location != null)
-                    tcs.TrySetResult(new models.Location
-                    {
-                        Lat = location.Latitude,
-                        Lon = location.Longitude
-                    });
-                return tcs.Task;
+                if (location == null)
+                    return null;
+                    
+                return new models.Location
+                {
+                    Lat = location.Latitude,
+                    Lon = location.Longitude
+                };
             }
             catch (Exception)
             {
                 throw new LocationIsNotAvailableException();
             }
-
         }
 
         public double GetDistance(double lat1, double lon1, double lat2, double lon2)
@@ -65,15 +63,22 @@ namespace android.services
             return distances[0];
         }
 
+        public bool IsGpsAvailable()
+        {
+            return locationManager.IsProviderEnabled("gps");
+        }
+
         public void OnLocationChanged(Location location)
         {
-            var locationModel = new models.Location
+            if (ConvertFromUnixTimestamp(location.Time) >= DateTime.Now.AddHours(-1))
             {
-                Lat = location.Latitude,
-                Lon = location.Longitude
-            };
-            tcs.TrySetResult(locationModel);
-            callback(locationModel);
+                var locationModel = new models.Location
+                {
+                    Lat = location.Latitude,
+                    Lon = location.Longitude
+                };
+                callback(locationModel);
+            }
         }
 
         public void OnProviderDisabled(string provider)

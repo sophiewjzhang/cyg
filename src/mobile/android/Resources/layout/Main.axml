@@ -51,7 +51,7 @@
             android:id="@+id/radioButton1"
             android:checked="true"
             android:buttonTint="#374232"
-            android:text="Show next three trips" />
+            android:text="Show next three trips for today" />
         <RadioButton
             android:id="@+id/radioButton2"
             android:buttonTint="#374232"
@@ -65,6 +65,15 @@
         android:layout_marginTop="20dp"
         android:id="@+id/checkBox1"
         android:text="Swap direction based on my location" />
+  <TextView xmlns:a="http://schemas.android.com/tools"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Please enable location service and restart application"
+            android:visibility="gone"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:id="@+id/textViewEnableLocation" />
     <Button
         android:text="Show trips"
         android:layout_width="match_parent"

@@ -15,13 +15,6 @@
       android:background="#ffcccc"
       android:visibility="gone"
       android:id="@+id/textViewNoInternet" />
-  <TextView xmlns:a="http://schemas.android.com/tools"
-      android:layout_height="wrap_content"
-      android:layout_width="match_parent"
-      android:text=""
-      android:background="#ffffcc"
-      android:visibility="gone"
-      android:id="@+id/textViewNoLocation" />
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -52,6 +45,16 @@
   </LinearLayout>
 
   <include layout="@layout/StopSpinners"/>
+  <TextView xmlns:a="http://schemas.android.com/tools"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text=""
+            android:background="#ffffcc"
+            android:visibility="gone"
+            android:paddingLeft="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:id="@+id/textViewNoLocation" />
 
   <TextView
       android:layout_height="5dp"

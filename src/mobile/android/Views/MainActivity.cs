@@ -29,8 +29,10 @@ namespace android
         private CheckBox locationSwitchCheckBox;
         private Button searchButton;
         private TextView textViewException;
+        private TextView textViewEnableLocation;
         private bool firstRun = true;
         private float initialY;
+        private ILocationService locationService;
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -38,6 +40,7 @@ namespace android
 
             routeDataService = App.Container.Resolve<IRouteDataService>();
             userSettingsService = App.Container.Resolve<IUserSettingsService>();
+            locationService = App.Container.Resolve<ILocationService>();
 
             SetContentView(Resource.Layout.Main);
 
@@ -58,8 +61,12 @@ namespace android
             showAllCheckbox.CheckedChange += async (s1, e1) => { await Save(); };
 
             locationSwitchCheckBox = FindViewById<CheckBox>(Resource.Id.checkBox1);
-            locationSwitchCheckBox.Checked = settings?.SwapDirectionBasedOnLocation ?? true;
+            locationSwitchCheckBox.Checked = locationService.IsGpsAvailable() && (settings?.SwapDirectionBasedOnLocation ?? true);
+            locationSwitchCheckBox.Enabled = locationService.IsGpsAvailable();
             locationSwitchCheckBox.CheckedChange += async (s1, e1) => { await Save(); };
+
+            textViewEnableLocation = FindViewById<TextView>(Resource.Id.textViewEnableLocation);
+            textViewEnableLocation.Visibility = locationService.IsGpsAvailable() ? ViewStates.Gone : ViewStates.Visible;
 
             searchButton = FindViewById<Button>(Resource.Id.button1);
             searchButton.Click += async (t, e1) => { await SearchButton_Click(t, e1); };
@@ -101,7 +108,7 @@ namespace android
                 return;
             }
 
-            var newValue = routes.FirstOrDefault(x => x.Value == spinnerRoute.SelectedItem.ToString()).Id;
+            var newValue = routes.FirstOrDefault(x => x.Value == spinnerRoute.SelectedItem.ToString())?.Id;
             if (settings?.RouteId == null)
             {
                 this.AddRouteSpinnerItemsWithSelectedValue(spinnerRoute, routes, newValue, Resource.Drawable.IdSpinner);
