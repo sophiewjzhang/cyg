@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using dto.Extensions;
 
 namespace api.Controllers
 {
@@ -34,6 +36,16 @@ namespace api.Controllers
         public async Task<IActionResult> AvailableDates()
         {
             return Ok(await tripRepository.GetAvailableDates());
+        }
+
+        [HttpGet("eligible/{fromId}/{toId}/{routeId}/{date}")]
+        public async Task<IActionResult> EligibleTrips(string fromId, string toId, string routeId, DateTime date)
+        {
+            var result = (await tripRepository.GetTripsFromToByRouteIdAndDate(fromId, toId, routeId, date))
+                .Where(x => x.IsEligible());
+            var resultYesterday = (await tripRepository.GetTripsFromToByRouteIdAndDate(fromId, toId, routeId, date.AddDays(-1)))
+                .Where(x => x.IsEligible());
+            return Ok(result.Union(resultYesterday));
         }
     }
 }

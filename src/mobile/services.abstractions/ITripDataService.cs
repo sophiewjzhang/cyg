@@ -13,5 +13,7 @@ namespace services.abstractions
         Task<IEnumerable<TripFromTo>> GetNextThreeTrips(string routeId, string from, string to);
         Task<IEnumerable<TripFromTo>> GetNextThreeTrips(string routeId, DateTime dateTime, string from, string to);
         Task<Tuple<DateTime, DateTime>> GetAvailableDates();
+        Task<IEnumerable<TripFromTo>> GetEligibleTrips(string routeId, DateTime date, string from,
+            string to);
     }
 }

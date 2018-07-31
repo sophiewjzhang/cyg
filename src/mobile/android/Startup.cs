@@ -38,6 +38,8 @@ namespace android
                 .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
             builder.RegisterType<TripDataService>().As<ITripDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
                 .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
+            builder.RegisterType<BrowserService>().As<IBrowserService>()
+                .WithParameter("serviceGuaranteeUrl", configuration.ServiceGuaranteeUrl);
             builder.RegisterType<UserSettingsService>().As<IUserSettingsService>();
             builder.RegisterType<LocationService>().As<ILocationService>();
             builder.RegisterInstance((LocationManager)context.GetSystemService(Context.LocationService));

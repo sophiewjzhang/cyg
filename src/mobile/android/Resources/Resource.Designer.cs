@@ -119,38 +119,50 @@ namespace android
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f07000a
-			public const int StopSpinners = 2131165194;
-			
-			// aapt resource value: 0x7f070009
-			public const int button1 = 2131165193;
-			
-			// aapt resource value: 0x7f070010
-			public const int buttonLeft = 2131165200;
-			
-			// aapt resource value: 0x7f070014
-			public const int buttonRight = 2131165204;
-			
-			// aapt resource value: 0x7f07000e
-			public const int buttonSettings = 2131165198;
+			// aapt resource value: 0x7f07000d
+			public const int StopSpinners = 2131165197;
 			
 			// aapt resource value: 0x7f07000c
-			public const int buttonSwitch = 2131165196;
+			public const int button1 = 2131165196;
 			
-			// aapt resource value: 0x7f070007
-			public const int checkBox1 = 2131165191;
+			// aapt resource value: 0x7f070013
+			public const int buttonLeft = 2131165203;
+			
+			// aapt resource value: 0x7f070017
+			public const int buttonRight = 2131165207;
 			
 			// aapt resource value: 0x7f070011
-			public const int flipper = 2131165201;
+			public const int buttonSettings = 2131165201;
 			
-			// aapt resource value: 0x7f070016
-			public const int idSpinnerText = 2131165206;
+			// aapt resource value: 0x7f07000f
+			public const int buttonSwitch = 2131165199;
 			
-			// aapt resource value: 0x7f070015
-			public const int layoutTrips = 2131165205;
+			// aapt resource value: 0x7f07000a
+			public const int checkBox1 = 2131165194;
+			
+			// aapt resource value: 0x7f070007
+			public const int checkBoxEligibility = 2131165191;
+			
+			// aapt resource value: 0x7f070009
+			public const int editTextPrestoCardNumber = 2131165193;
+			
+			// aapt resource value: 0x7f070014
+			public const int flipper = 2131165204;
+			
+			// aapt resource value: 0x7f07001b
+			public const int idSpinnerText = 2131165211;
+			
+			// aapt resource value: 0x7f07001a
+			public const int layoutTrips = 2131165210;
 			
 			// aapt resource value: 0x7f070003
 			public const int loader = 2131165187;
+			
+			// aapt resource value: 0x7f070018
+			public const int messageTextView = 2131165208;
+			
+			// aapt resource value: 0x7f070019
+			public const int messageTextViewYesterday = 2131165209;
 			
 			// aapt resource value: 0x7f070005
 			public const int radioButton1 = 2131165189;
@@ -161,32 +173,35 @@ namespace android
 			// aapt resource value: 0x7f070004
 			public const int radioGroup = 2131165188;
 			
-			// aapt resource value: 0x7f07000b
-			public const int spinnerFrom = 2131165195;
+			// aapt resource value: 0x7f07000e
+			public const int spinnerFrom = 2131165198;
 			
 			// aapt resource value: 0x7f070002
 			public const int spinnerRoute = 2131165186;
 			
-			// aapt resource value: 0x7f07000d
-			public const int spinnerTo = 2131165197;
+			// aapt resource value: 0x7f070010
+			public const int spinnerTo = 2131165200;
 			
 			// aapt resource value: 0x7f070001
 			public const int textView0 = 2131165185;
 			
-			// aapt resource value: 0x7f070012
-			public const int textViewDate = 2131165202;
+			// aapt resource value: 0x7f070015
+			public const int textViewDate = 2131165205;
 			
-			// aapt resource value: 0x7f070013
-			public const int textViewDate1 = 2131165203;
+			// aapt resource value: 0x7f070016
+			public const int textViewDate1 = 2131165206;
 			
-			// aapt resource value: 0x7f070008
-			public const int textViewEnableLocation = 2131165192;
+			// aapt resource value: 0x7f07000b
+			public const int textViewEnableLocation = 2131165195;
 			
 			// aapt resource value: 0x7f070000
 			public const int textViewNoInternet = 2131165184;
 			
-			// aapt resource value: 0x7f07000f
-			public const int textViewNoLocation = 2131165199;
+			// aapt resource value: 0x7f070012
+			public const int textViewNoLocation = 2131165202;
+			
+			// aapt resource value: 0x7f070008
+			public const int textViewPrestoCardNumber = 2131165192;
 			
 			static Id()
 			{

@@ -10,9 +10,12 @@ namespace dal.Abstractions
     {
         Task<IEnumerable<Trip>> GetTripsByRoute(string routeId);
         Task<IEnumerable<Trip>> GetTripsByRouteAndDate(string routeId, DateTime date);
+        Task<IEnumerable<StopTime>> GetAllTripsFromToByDate(DateTime startDateTime, DateTime endDateTime);
         Task<IEnumerable<TripFromTo>> GetTripsFromToByRouteIdAndDate(string fromId, string toId, string routeId, DateTime date);
         Task<IEnumerable<TripFromTo>> GetNextThreeTrips(string fromId, string toId, string routeId);
         Task<Trip> GetTrip(string tripId);
         Task<Tuple<DateTime, DateTime>> GetAvailableDates();
+        Task<bool> IsTripEligible(StopTime stopTime, DateTime date);
+        Task<int> UpdateTripEligibility(StopTime endStopTime, bool isEligible);
     }
 }

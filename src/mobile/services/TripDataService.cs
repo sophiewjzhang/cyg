@@ -45,5 +45,11 @@ namespace services
         {
             return await GetEntityFromApiAsync<Tuple<DateTime, DateTime>>(new Uri(baseUrl, "trip/dates"));
         }
+
+        public async Task<IEnumerable<TripFromTo>> GetEligibleTrips(string routeId, DateTime date, string from, string to)
+        {
+            var dateFormat = date.ToString("yyyy-MM-dd");
+            return await GetAsync<TripFromTo>($"trip/eligible/{from}/{to}/{routeId}/{dateFormat}");
+        }
     }
 }

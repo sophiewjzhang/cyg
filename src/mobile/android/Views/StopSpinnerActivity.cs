@@ -32,6 +32,8 @@ namespace android.Views
         protected TextView loader;
         protected TranslateAnimation animation;
 
+        protected string GetStopNameById(string stopId) => stopModels.SingleOrDefault(x => stopId == x.StopId)?.StopName;
+
         protected void InitControls(Func<Task> spinnerSelect, bool swapLocationNeeded, bool useIds = true)
         {
             stopDataService = App.Container.Resolve<IStopDataService>();

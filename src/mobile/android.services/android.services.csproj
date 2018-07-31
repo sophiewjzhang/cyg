@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AkavacheSqliteLinkerOverride.cs" />
+    <Compile Include="BrowserService.cs" />
     <Compile Include="CacheService.cs" />
     <Compile Include="LocationService.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -116,6 +117,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\..\libs\dto\dto.csproj">
+      <Project>{5DF642D9-4275-4D9A-9F09-273B60443A24}</Project>
+      <Name>dto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\libs\models\models.csproj">
       <Project>{047B36D8-9F20-4A9A-99D7-59B518559142}</Project>
       <Name>models</Name>

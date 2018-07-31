@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
   <LinearLayout
       android:orientation="vertical"
       android:layout_width="match_parent"
@@ -43,7 +44,6 @@
         android:adjustViewBounds="true"
         android:src="@drawable/settings"/>
   </LinearLayout>
-
   <include layout="@layout/StopSpinners"/>
   <TextView xmlns:a="http://schemas.android.com/tools"
             android:layout_height="wrap_content"
@@ -55,7 +55,6 @@
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:id="@+id/textViewNoLocation" />
-
   <TextView
       android:layout_height="5dp"
       android:layout_width="50dp"
@@ -145,6 +144,26 @@
         android:paddingBottom="5dp"
         android:paddingRight="5dp" />
   </LinearLayout>
+    <TextView
+      android:id="@+id/messageTextView"
+      android:text="Some trips for this day are eligible for service guarantee claim. Click on trip to submit claim."
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="10dp"
+      android:background="#c8f3ba"
+      android:textColor="@android:color/black"
+      android:visibility="gone"
+    />
+    <TextView
+      android:id="@+id/messageTextViewYesterday"
+      android:text="Some trips for previous date are eligible for service guarantee claim. Swipe left to check."
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="10dp"
+      android:background="#c8f3ba"
+      android:textColor="@android:color/black"
+      android:visibility="gone"
+    />
   <ScrollView
       android:layout_height="match_parent"
       android:layout_width="match_parent">
@@ -155,4 +174,5 @@
         android:id="@+id/layoutTrips" />
   </ScrollView>
   </LinearLayout>
+
 </LinearLayout>
