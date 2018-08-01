@@ -15,7 +15,5 @@ namespace DTO
         public int DropOffType { get; set; }
         public string StopHeadsign { get; set; }
         public bool? IsEligible { get; set; }
-
-        public string TripShortId => TripId.Split('-').Last();
     }
 }

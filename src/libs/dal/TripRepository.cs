@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using dto;
+using dto.Extensions;
 using Newtonsoft.Json;
 
 namespace dal
@@ -120,7 +121,7 @@ and r.routetype = 2", new
                     {
                         startDateTime = startDateTime,
                         endDateTime = endDateTime
-                    });
+                    }, commandTimeout: 300);
             }
         }
 
@@ -133,7 +134,7 @@ and r.routetype = 2", new
             }
         }
 
-        public async Task<bool> IsTripEligible(StopTime endStopTime, DateTime date)
+        public async Task<bool> IsTripEligible(StopTime endStopTime)
         {
             if (string.IsNullOrEmpty(eligibilityUrl))
             {
@@ -142,9 +143,9 @@ and r.routetype = 2", new
 
             var stringContent = JsonConvert.SerializeObject(new
             {
-                dateString = date.ToString("MMddyyyy"),
+                dateString = endStopTime.GetDate().ToString("MMddyyyy"),
                 arrivalstationCode = endStopTime.StopId,
-                tripNumber = endStopTime.TripShortId,
+                tripNumber = endStopTime.TripShortId(),
                 lang = "en",
             });
             var client = (HttpWebRequest) WebRequest.Create(new Uri(eligibilityUrl));

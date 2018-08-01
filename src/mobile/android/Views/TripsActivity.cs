@@ -23,9 +23,17 @@ namespace android
     [Activity(Label = "Trips")]
     public class TripsActivity : StopSpinnerActivity, IOnDateSetListener
     {
+        #region services
+
         private IRouteDataService routeDataService;
         private ITripDataService tripDataService;
         private IBrowserService browserService;
+        private IUserSettingsService userSettingsService;
+
+        #endregion
+
+        #region controls
+
         private ImageButton buttonSettings;
         private Spinner spinnerRoute;
         private TextView textViewDate;
@@ -34,20 +42,25 @@ namespace android
         private TextView textViewNoLocation;
         private TextView messageTextView;
         private TextView messageTextViewYesterday;
-        private IUserSettingsService userSettingsService;
         private DateTime dateSelected;
-        private IList<SpinnerItem> routes;
         private LinearLayout parentLayout;
         private ViewFlipper flipper;
-        private float initialX;
         private TextView currentDateTextView;
-        private bool isFreshMove = false;
         private ImageButton buttonLeft;
         private ImageButton buttonRight;
-        private Tuple<DateTime, DateTime> availableDates;
 
+        #endregion
+
+        #region private members
+
+        private float initialX;
+        private bool isFreshMove = false;
+        private Tuple<DateTime, DateTime> availableDates;
+        private IList<SpinnerItem> routes;
         private Dictionary<string, string> selectedFromCache = new Dictionary<string, string>();
         private Dictionary<string, string> selectedToCache = new Dictionary<string, string>();
+
+        #endregion
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -169,15 +182,7 @@ namespace android
             {
                 IEnumerable<TripFromTo> trips;
                 loader.StartAnimation(animation);
-//                if (settings.ShowEligibleTrips)
-//                {
-//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                    Task.Run(async () =>
-//                    {
-                        
-//                    });
-//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                }
+
                 if (settings.ShowOnlyThreeTrips && dateSelected.Date == DateTime.Now.Date)
                 {
                     trips = await tripDataService.GetNextThreeTrips(settings.RouteId, dateSelected, from, to);
@@ -199,7 +204,7 @@ namespace android
                     var index = 0;
                     foreach (var trip in trips)
                     {
-                        Color backgroundColor =
+                        var backgroundColor =
                             index % 2 == 0 ? new Color(0x37, 0x42, 0x32) : new Color(0x2a, 0x5c, 0x12);
                         var linearLayout = new LinearLayout(this)
                         {
@@ -225,63 +230,7 @@ namespace android
                     // 7 is max past days provided on go train claim page
                     if (DateTime.Now.Date - dateSelected.Date < TimeSpan.FromDays(7))
                     {
-                        RunOnUiThread(async () =>
-                        {
-                            var eligibleTrips =
-                                await tripDataService.GetEligibleTrips(settings.RouteId, dateSelected, from, to);
-                            var tripFromTos = eligibleTrips as TripFromTo[] ?? eligibleTrips.ToArray();
-
-                            var hasEligibleTrips =
-                                tripFromTos.Any(x => x.GetEligibility() && x.GetDate() == dateSelected.Date);
-                            messageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
-
-                            if (DateTime.Now.Date - dateSelected.Date.AddDays(-1) < TimeSpan.FromDays(7))
-                            {
-                                var hasEligibleTripsYesterday = tripFromTos.Any(x =>
-                                    x.GetEligibility() && x.GetDate() == dateSelected.Date.AddDays(-1));
-                                messageTextViewYesterday.Visibility =
-                                    hasEligibleTripsYesterday ? ViewStates.Visible : ViewStates.Gone;
-                            }
-                            else
-                            {
-                                messageTextViewYesterday.Visibility = ViewStates.Gone;
-                            }
-
-                            foreach (var eligibleTrip in tripFromTos)
-                            {
-                                var layout =
-                                    FindViewById<LinearLayout>(
-                                        Math.Abs($"{eligibleTrip.From.TripId}-layout".GetHashCode()));
-                                if (layout == null) continue;
-                                layout.Click += (s, e) =>
-                                {
-                                    var clipboardService = (ClipboardManager) GetSystemService(ClipboardService);
-                                    clipboardService.PrimaryClip =
-                                        ClipData.NewPlainText("prestoNumber", settings.PrestoCardNumber);
-                                    var toast = Toast.MakeText(this,
-                                        "Your Presto Number has been copied to clipboard. You will be redirected to Metrolinx website to submit claim.",
-                                        ToastLength.Long);
-                                    toast.SetGravity(GravityFlags.Center, 0, 0);
-                                    toast.Show();
-
-                                    browserService.OpenServiceGuaranteePage(eligibleTrip, dateSelected,
-                                        GetStopNameById(eligibleTrip.From.StopId),
-                                        GetStopNameById(eligibleTrip.To.StopId));
-                                };
-
-                                for (var i = 0; i < layout.ChildCount; i++)
-                                {
-                                    if (layout.GetChildAt(i) is TextView tv)
-                                    {
-                                        tv.SetTextColor(new Color(249, 132, 125));
-                                        if (i == layout.ChildCount - 1)
-                                        {
-                                            tv.Text = $"{eligibleTrip.GetTripTimeText()} (late)";
-                                        }
-                                    }
-                                }
-                            }
-                        });
+                        RunOnUiThread(() => CheckForEligibleTrips(from, to));
                     }
                     else
                     {
@@ -293,6 +242,61 @@ namespace android
             catch (Exception ex)
             {
                 ShowError(ex);
+            }
+        }
+
+        private async void CheckForEligibleTrips(string from, string to)
+        {
+            var eligibleTrips = await tripDataService.GetEligibleTrips(settings.RouteId, dateSelected, from, to);
+            var tripFromTos = eligibleTrips as TripFromTo[] ?? eligibleTrips.ToArray();
+
+            var hasEligibleTrips =
+                tripFromTos.Any(x => x.GetEligibility() && x.GetDate() == dateSelected.Date);
+            messageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
+
+            if (DateTime.Now.Date - dateSelected.Date.AddDays(-1) < TimeSpan.FromDays(7))
+            {
+                var hasEligibleTripsYesterday = tripFromTos.Any(x => x.GetEligibility() && x.GetDate() == dateSelected.Date.AddDays(-1));
+                messageTextViewYesterday.Visibility = hasEligibleTripsYesterday ? ViewStates.Visible : ViewStates.Gone;
+            }
+            else
+            {
+                messageTextViewYesterday.Visibility = ViewStates.Gone;
+            }
+
+            foreach (var eligibleTrip in tripFromTos)
+            {
+                var layout =
+                    FindViewById<LinearLayout>(
+                        Math.Abs($"{eligibleTrip.From.TripId}-layout".GetHashCode()));
+                if (layout == null) continue;
+                layout.Click += (s, e) =>
+                {
+                    var clipboardService = (ClipboardManager)GetSystemService(ClipboardService);
+                    clipboardService.PrimaryClip =
+                        ClipData.NewPlainText("prestoNumber", settings.PrestoCardNumber);
+                    var toast = Toast.MakeText(this,
+                        "Your Presto Number has been copied to clipboard. You will be redirected to Metrolinx website to submit claim.",
+                        ToastLength.Long);
+                    toast.SetGravity(GravityFlags.Center, 0, 0);
+                    toast.Show();
+
+                    browserService.OpenServiceGuaranteePage(eligibleTrip, dateSelected,
+                        GetStopNameById(eligibleTrip.From.StopId),
+                        GetStopNameById(eligibleTrip.To.StopId));
+                };
+
+                for (var i = 0; i < layout.ChildCount; i++)
+                {
+                    if (layout.GetChildAt(i) is TextView tv)
+                    {
+                        tv.SetTextColor(new Color(249, 132, 125));
+                        if (i == layout.ChildCount - 1)
+                        {
+                            tv.Text = $"{eligibleTrip.GetTripTimeText()} (late)";
+                        }
+                    }
+                }
             }
         }
 

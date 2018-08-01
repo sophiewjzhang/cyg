@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using dal;
+using dto.Extensions;
+using DTO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +19,17 @@ namespace eligibilitysync
             {
                 try
                 {
+                    var hoursRange = 2;
+                    var hoursBackShift = 1;
+                    if (args.Length > 0)
+                    {
+                        hoursBackShift = int.Parse(args[0]);
+                        if (args.Length > 1)
+                        {
+                            hoursRange = int.Parse(args[1]);
+                        }
+                    }
+
                     var stopwatch = new Stopwatch();
                     stopwatch.Start();
                     var configuration = new ConfigurationBuilder()
@@ -23,17 +37,19 @@ namespace eligibilitysync
                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .Build();
 
-                    var yesterday = DateTime.Now.Date.AddDays(-1);
                     var tripRepository = new TripRepository(configuration.GetValue<string>("TargetConnectionString"), configuration.GetValue<string>("EligibilityApiUrl"));
 
-                    var endDatetime = DateTime.Now;
-                    var startDatetime = endDatetime.AddDays(-2);
-                    var yesterdayTrips = await tripRepository.GetAllTripsFromToByDate(startDatetime, endDatetime);
+                    var endDatetime = DateTime.Now.AddHours(-1 * hoursBackShift);
+                    var startDatetime = endDatetime.AddHours(-1 * hoursRange);
+                    var tripsToProcess = await tripRepository.GetAllTripsFromToByDate(startDatetime, endDatetime);
 
-                    foreach (var trip in yesterdayTrips)
+                    var toProcess = tripsToProcess as StopTime[] ?? tripsToProcess.ToArray();
+                    Console.WriteLine($"{toProcess.Count()} found between {startDatetime} and {endDatetime}");
+
+                    foreach (var trip in toProcess)
                     {
-                        var isEligible = await tripRepository.IsTripEligible(trip, yesterday);
-                        Console.WriteLine($"Trip {trip.TripId} {trip.StopHeadsign} is { (isEligible ? "eligible" : "NOT eligible") } for return");
+                        var isEligible = await tripRepository.IsTripEligible(trip);
+                        Console.WriteLine($"Trip {trip.TripId} {trip.StopHeadsign} {trip.GetDate()} is { (isEligible ? "eligible" : "NOT eligible") } for return");
                         await tripRepository.UpdateTripEligibility(trip, isEligible);
                     }
                     Console.WriteLine($"elapsed {stopwatch.ElapsedMilliseconds}");

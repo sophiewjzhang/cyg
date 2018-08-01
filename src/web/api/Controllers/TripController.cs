@@ -42,9 +42,9 @@ namespace api.Controllers
         public async Task<IActionResult> EligibleTrips(string fromId, string toId, string routeId, DateTime date)
         {
             var result = (await tripRepository.GetTripsFromToByRouteIdAndDate(fromId, toId, routeId, date))
-                .Where(x => x.IsEligible());
+                .Where(x => x.GetEligibility());
             var resultYesterday = (await tripRepository.GetTripsFromToByRouteIdAndDate(fromId, toId, routeId, date.AddDays(-1)))
-                .Where(x => x.IsEligible());
+                .Where(x => x.GetEligibility());
             return Ok(result.Union(resultYesterday));
         }
     }

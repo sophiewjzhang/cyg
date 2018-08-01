@@ -15,7 +15,7 @@ namespace dal.Abstractions
         Task<IEnumerable<TripFromTo>> GetNextThreeTrips(string fromId, string toId, string routeId);
         Task<Trip> GetTrip(string tripId);
         Task<Tuple<DateTime, DateTime>> GetAvailableDates();
-        Task<bool> IsTripEligible(StopTime stopTime, DateTime date);
+        Task<bool> IsTripEligible(StopTime stopTime);
         Task<int> UpdateTripEligibility(StopTime endStopTime, bool isEligible);
     }
 }
