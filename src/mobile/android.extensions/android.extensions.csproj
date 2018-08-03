@@ -46,6 +46,7 @@
     <Compile Include="ActivityExtensions.cs" />
     <Compile Include="BaseViewAdapter.cs" />
     <Compile Include="GlobalExtenstioncs.cs" />
+    <Compile Include="LinearLayoutExtensions.cs" />
     <Compile Include="StopViewAdapter.cs" />
     <Compile Include="RouteViewAdapter.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

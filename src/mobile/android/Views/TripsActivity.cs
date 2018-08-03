@@ -193,8 +193,6 @@ namespace android
                 }
                 loader.ClearAnimation();
 
-                parentLayout.RemoveAllViews();
-
                 if (!trips.Any())
                 {
                     parentLayout.AddView(this.GetTextViewTripListStyle("No trips for today. Swipe left to see trips for tomorrow.", new Color(0x37, 0x42, 0x32), Resources.DisplayMetrics.Density), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.WrapContent));
@@ -204,25 +202,7 @@ namespace android
                     var index = 0;
                     foreach (var trip in trips)
                     {
-                        var backgroundColor =
-                            index % 2 == 0 ? new Color(0x37, 0x42, 0x32) : new Color(0x2a, 0x5c, 0x12);
-                        var linearLayout = new LinearLayout(this)
-                        {
-                            LayoutParameters = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FillParent,
-                                ViewGroup.LayoutParams.WrapContent),
-                            Orientation = Orientation.Horizontal,
-                            Id = Math.Abs($"{trip.From.TripId}-layout".GetHashCode())
-                        };
-                        parentLayout.AddView(linearLayout);
-
-                        linearLayout.AddView(this.GetTextViewTripListStyle(trip.From.DepartureTime.ToString("hh':'mm"),
-                            backgroundColor, Resources.DisplayMetrics.Density, id: $"{trip.From.TripId}-from"));
-
-                        linearLayout.AddView(this.GetTextViewTripListStyle(trip.To.ArrivalTime.ToString("hh':'mm"),
-                            backgroundColor, Resources.DisplayMetrics.Density, id: $"{trip.From.TripId}-to"));
-
-                        linearLayout.AddView(this.GetTextViewTripListStyle(trip.GetTripTimeText(), backgroundColor,
-                            Resources.DisplayMetrics.Density, id: $"{trip.From.TripId}-duration"));
+                        parentLayout.AddTripLayout(trip, index % 2 == 0 ? new Color(0x37, 0x42, 0x32) : new Color(0x2a, 0x5c, 0x12), Resources.DisplayMetrics.Density);
 
                         index++;
                     }

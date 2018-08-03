@@ -37,7 +37,8 @@ namespace android
             builder.RegisterType<StopDataService>().As<IStopDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
                 .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
             builder.RegisterType<TripDataService>().As<ITripDataService>().WithParameter("baseUrl", configuration.ApiBaseUrl)
-                .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds);
+                .WithParameter("apiTimeoutInSeconds", configuration.ApiTimeoutInSeconds)
+                .WithParameter("apiTimeoutInSeconds", configuration.EligibilityDaysAvailable);
             builder.RegisterType<BrowserService>().As<IBrowserService>()
                 .WithParameter("serviceGuaranteeUrl", configuration.ServiceGuaranteeUrl);
             builder.RegisterType<UserSettingsService>().As<IUserSettingsService>();

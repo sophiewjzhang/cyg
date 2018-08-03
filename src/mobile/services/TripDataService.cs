@@ -9,8 +9,11 @@ namespace services
 {
     public class TripDataService : BaseDataService, ITripDataService
     {
-        public TripDataService(ICacheService cacheService, string baseUrl, int apiTimeoutInSeconds) : base(cacheService, baseUrl, apiTimeoutInSeconds)
+        private int eligibilityDaysAvailable;
+
+        public TripDataService(ICacheService cacheService, string baseUrl, int apiTimeoutInSeconds, int eligibilityDaysAvailable) : base(cacheService, baseUrl, apiTimeoutInSeconds)
         {
+            this.eligibilityDaysAvailable = eligibilityDaysAvailable;
         }
 
         public async Task<IEnumerable<TripFromTo>> GetNextThreeTrips(string routeId, Stop from, Stop to)
