@@ -37,7 +37,8 @@ namespace eligibilitysync
                         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .Build();
 
-                    var tripRepository = new TripRepository(configuration.GetValue<string>("TargetConnectionString"), configuration.GetValue<string>("EligibilityApiUrl"));
+                    var tripRepository = new TripRepository(configuration.GetValue<string>("TargetConnectionString"),
+                        configuration.GetValue<string>("EligibilityApiUrl"));
 
                     var endDatetime = DateTime.Now.AddHours(-1 * hoursBackShift);
                     var startDatetime = endDatetime.AddHours(-1 * hoursRange);
@@ -49,9 +50,11 @@ namespace eligibilitysync
                     foreach (var trip in toProcess)
                     {
                         var isEligible = await tripRepository.IsTripEligible(trip);
-                        Console.WriteLine($"Trip {trip.TripId} {trip.StopHeadsign} {trip.GetDate()} is { (isEligible ? "eligible" : "NOT eligible") } for return");
+                        Console.WriteLine(
+                            $"Trip {trip.TripId} {trip.StopHeadsign} {trip.GetDate()} is {(isEligible ? "eligible" : "NOT eligible")} for return");
                         await tripRepository.UpdateTripEligibility(trip, isEligible);
                     }
+
                     Console.WriteLine($"elapsed {stopwatch.ElapsedMilliseconds}");
 
                     stopwatch.Stop();
@@ -61,8 +64,7 @@ namespace eligibilitysync
                     Console.WriteLine(e);
                     throw;
                 }
-            });
-            Console.ReadLine();
+            }).Wait();
         }
     }
 }
