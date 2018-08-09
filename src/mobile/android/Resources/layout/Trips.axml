@@ -164,6 +164,16 @@
       android:textColor="@android:color/black"
       android:visibility="gone"
     />
+    <TextView
+      android:id="@+id/messageTextViewNoTrips"
+      android:text="No trips for today. Swipe left to see trips for tomorrow."
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="10dp"
+      android:background="#c8f3ba"
+      android:textColor="@android:color/black"
+      android:visibility="gone"
+    />
   <ScrollView
       android:layout_height="match_parent"
       android:layout_width="match_parent">

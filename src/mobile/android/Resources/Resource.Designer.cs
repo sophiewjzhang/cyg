@@ -149,17 +149,20 @@ namespace android
 			// aapt resource value: 0x7f070014
 			public const int flipper = 2131165204;
 			
-			// aapt resource value: 0x7f07001b
-			public const int idSpinnerText = 2131165211;
+			// aapt resource value: 0x7f07001c
+			public const int idSpinnerText = 2131165212;
 			
-			// aapt resource value: 0x7f07001a
-			public const int layoutTrips = 2131165210;
+			// aapt resource value: 0x7f07001b
+			public const int layoutTrips = 2131165211;
 			
 			// aapt resource value: 0x7f070003
 			public const int loader = 2131165187;
 			
 			// aapt resource value: 0x7f070018
 			public const int messageTextView = 2131165208;
+			
+			// aapt resource value: 0x7f07001a
+			public const int messageTextViewNoTrips = 2131165210;
 			
 			// aapt resource value: 0x7f070019
 			public const int messageTextViewYesterday = 2131165209;

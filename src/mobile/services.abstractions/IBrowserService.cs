@@ -6,6 +6,6 @@ namespace services.abstractions
 {
     public interface IBrowserService
     {
-        void OpenServiceGuaranteePage(TripFromTo trip, DateTime dateTime, string from, string to);
+        void OpenServiceGuaranteePage(TripFromTo trip, DateTime dateTime, string from, string to, string prestoCardNumber);
     }
 }
