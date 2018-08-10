@@ -204,7 +204,10 @@ namespace android
                     index++;
                 }
 
-                RunOnUiThread(() => CheckForEligibleTrips(from, to));
+                if (settings.ShowEligibleTrips)
+                {
+                    RunOnUiThread(() => CheckForEligibleTrips(from, to));
+                }
             }
             catch (Exception ex)
             {
