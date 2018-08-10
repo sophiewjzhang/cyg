@@ -77,34 +77,70 @@ namespace android
 			public const int baseline_arrow_drop_down_white_24dp = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int icon = 2130837505;
+			public const int eligible = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int IdSpinner = 2130837506;
+			public const int eligible_s = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int left = 2130837507;
+			public const int icon = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int right = 2130837508;
+			public const int IdSpinner = 2130837508;
 			
 			// aapt resource value: 0x7f020005
-			public const int settings = 2130837509;
+			public const int left = 2130837509;
 			
 			// aapt resource value: 0x7f020006
-			public const int splash = 2130837510;
+			public const int right = 2130837510;
 			
 			// aapt resource value: 0x7f020007
-			public const int splashIcon = 2130837511;
+			public const int settings = 2130837511;
 			
 			// aapt resource value: 0x7f020008
-			public const int stop_spinner_bg_left = 2130837512;
+			public const int sharp_info_24 = 2130837512;
 			
 			// aapt resource value: 0x7f020009
-			public const int stop_spinner_bg_right = 2130837513;
+			public const int sharp_info_white_18 = 2130837513;
 			
 			// aapt resource value: 0x7f02000a
-			public const int switchIcon = 2130837514;
+			public const int sharp_info_white_24 = 2130837514;
+			
+			// aapt resource value: 0x7f02000b
+			public const int sharp_info_white_36 = 2130837515;
+			
+			// aapt resource value: 0x7f02000c
+			public const int sharp_info_white_48 = 2130837516;
+			
+			// aapt resource value: 0x7f02000d
+			public const int sharp_monetization_on_24 = 2130837517;
+			
+			// aapt resource value: 0x7f02000e
+			public const int sharp_monetization_on_white_18 = 2130837518;
+			
+			// aapt resource value: 0x7f02000f
+			public const int sharp_monetization_on_white_24 = 2130837519;
+			
+			// aapt resource value: 0x7f020010
+			public const int sharp_monetization_on_white_36 = 2130837520;
+			
+			// aapt resource value: 0x7f020011
+			public const int sharp_monetization_on_white_48 = 2130837521;
+			
+			// aapt resource value: 0x7f020012
+			public const int splash = 2130837522;
+			
+			// aapt resource value: 0x7f020013
+			public const int splashIcon = 2130837523;
+			
+			// aapt resource value: 0x7f020014
+			public const int stop_spinner_bg_left = 2130837524;
+			
+			// aapt resource value: 0x7f020015
+			public const int stop_spinner_bg_right = 2130837525;
+			
+			// aapt resource value: 0x7f020016
+			public const int switchIcon = 2130837526;
 			
 			static Drawable()
 			{
@@ -146,26 +182,32 @@ namespace android
 			// aapt resource value: 0x7f070009
 			public const int editTextPrestoCardNumber = 2131165193;
 			
+			// aapt resource value: 0x7f070019
+			public const int eligibleImage = 2131165209;
+			
 			// aapt resource value: 0x7f070014
 			public const int flipper = 2131165204;
 			
-			// aapt resource value: 0x7f07001c
-			public const int idSpinnerText = 2131165212;
+			// aapt resource value: 0x7f07001e
+			public const int idSpinnerText = 2131165214;
 			
-			// aapt resource value: 0x7f07001b
-			public const int layoutTrips = 2131165211;
+			// aapt resource value: 0x7f070018
+			public const int layoutMessageTextView = 2131165208;
+			
+			// aapt resource value: 0x7f07001d
+			public const int layoutTrips = 2131165213;
 			
 			// aapt resource value: 0x7f070003
 			public const int loader = 2131165187;
 			
-			// aapt resource value: 0x7f070018
-			public const int messageTextView = 2131165208;
-			
 			// aapt resource value: 0x7f07001a
-			public const int messageTextViewNoTrips = 2131165210;
+			public const int messageTextView = 2131165210;
 			
-			// aapt resource value: 0x7f070019
-			public const int messageTextViewYesterday = 2131165209;
+			// aapt resource value: 0x7f07001c
+			public const int messageTextViewNoTrips = 2131165212;
+			
+			// aapt resource value: 0x7f07001b
+			public const int messageTextViewYesterday = 2131165211;
 			
 			// aapt resource value: 0x7f070005
 			public const int radioButton1 = 2131165189;

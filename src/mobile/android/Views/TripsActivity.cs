@@ -40,9 +40,9 @@ namespace android
         private TextView textViewDate1;
         private TextView textViewException;
         private TextView textViewNoLocation;
-        private TextView messageTextView;
-        private TextView messageTextViewYesterday;
-        private TextView messageTextViewNoTrips;
+        private LinearLayout layoutMessageTextView;
+        private LinearLayout messageTextViewYesterday;
+        private LinearLayout messageTextViewNoTrips;
         private DateTime dateSelected;
         private LinearLayout parentLayout;
         private ViewFlipper flipper;
@@ -95,9 +95,9 @@ namespace android
             spinnerRoute = FindViewById<Spinner>(Resource.Id.spinnerRoute);
             textViewException = FindViewById<TextView>(Resource.Id.textViewNoInternet);
             textViewNoLocation = FindViewById<TextView>(Resource.Id.textViewNoLocation);
-            messageTextView = FindViewById<TextView>(Resource.Id.messageTextView);
-            messageTextViewYesterday = FindViewById<TextView>(Resource.Id.messageTextViewYesterday);
-            messageTextViewNoTrips = FindViewById<TextView>(Resource.Id.messageTextViewNoTrips);
+            layoutMessageTextView = FindViewById<LinearLayout>(Resource.Id.layoutMessageTextView);
+            messageTextViewYesterday = FindViewById<LinearLayout>(Resource.Id.messageTextViewYesterday);
+            messageTextViewNoTrips = FindViewById<LinearLayout>(Resource.Id.messageTextViewNoTrips);
             buttonLeft = FindViewById<ImageButton>(Resource.Id.buttonLeft);
             buttonRight = FindViewById<ImageButton>(Resource.Id.buttonRight);
 
@@ -183,7 +183,7 @@ namespace android
 
             try
             {
-                messageTextView.Visibility = ViewStates.Gone;
+                layoutMessageTextView.Visibility = ViewStates.Gone;
                 messageTextViewYesterday.Visibility = ViewStates.Gone;
                 messageTextViewNoTrips.Visibility = ViewStates.Gone;
 
@@ -212,12 +212,14 @@ namespace android
             }
         }
 
+        private int DpToPx(int dp) => (int)(dp * Resources.DisplayMetrics.Density + 0.5f);
+
         private async void CheckForEligibleTrips(string from, string to)
         {
             var eligibleTrips = await tripDataService.GetEligibleTrips(settings.RouteId, dateSelected, from, to);
 
             var hasEligibleTrips = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date);
-            messageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
+            layoutMessageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
 
             var hasEligibleTripsYesterday = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date.AddDays(-1));
             messageTextViewYesterday.Visibility = hasEligibleTripsYesterday ? ViewStates.Visible : ViewStates.Gone;
@@ -234,17 +236,16 @@ namespace android
                         settings.PrestoCardNumber);
                 };
 
-                for (var i = 0; i < layout.ChildCount; i++)
+                layout.GetChildAt(0).Visibility = ViewStates.Gone;
+                var imageView = new ImageView(this)
                 {
-                    if (layout.GetChildAt(i) is TextView tv)
-                    {
-                        tv.SetTextColor(new Color(249, 132, 125));
-                        if (i == layout.ChildCount - 1)
-                        {
-                            tv.Text = $"{eligibleTrip.GetTripTimeText()} (late)";
-                        }
-                    }
-                }
+                    LayoutParameters = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, 0.1f)
+                };
+                layout.RemoveViewAt(0);
+                imageView.SetPadding(DpToPx(15), DpToPx(3), 0, DpToPx(3));
+                imageView.SetMaxHeight(DpToPx(14));
+                imageView.SetImageResource(Resource.Drawable.sharp_monetization_on_24);
+                layout.AddView(imageView, 0);
             }
         }
 

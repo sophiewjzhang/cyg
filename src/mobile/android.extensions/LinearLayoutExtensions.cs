@@ -19,7 +19,10 @@ namespace android.extensions
                 Orientation = Orientation.Horizontal,
                 Id = Math.Abs($"{trip.From.TripId}-layout".GetHashCode())
             };
+            linearLayout.SetBackgroundColor(backgroundColor);
             parentLayout.AddView(linearLayout);
+
+            linearLayout.AddView(parentLayout.Context.GetTextViewTripListStyle("", backgroundColor, density, weight: 0.1f));
 
             linearLayout.AddView(parentLayout.Context.GetTextViewTripListStyle(trip.From.DepartureTime.ToString("hh':'mm"),
                 backgroundColor, density, id: $"{trip.From.TripId}-from"));
@@ -29,7 +32,6 @@ namespace android.extensions
 
             linearLayout.AddView(parentLayout.Context.GetTextViewTripListStyle(trip.GetTripTimeText(), backgroundColor,
                 density, id: $"{trip.From.TripId}-duration"));
-
         }
     }
 }

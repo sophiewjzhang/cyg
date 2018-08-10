@@ -8,12 +8,12 @@ namespace android.extensions
 {
     public static class TextViewExtensions
     {
-        public static TextView GetTextViewTripListStyle(this Context context, string text, Color background, float dencity, LayoutParams layoutParams = null, bool isEligible = false, string id = null)
+        public static TextView GetTextViewTripListStyle(this Context context, string text, Color background, float dencity, LayoutParams layoutParams = null, bool isEligible = false, string id = null, float weight = 0.3f)
         {
             var textView = new TextView(context)
             {
                 Text = text,
-                LayoutParameters = layoutParams ?? new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, 0.3f)
+                LayoutParameters = layoutParams ?? new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, weight)
             };
 
             textView.SetTextColor(isEligible ? Color.OrangeRed : Color.White);
@@ -61,6 +61,5 @@ namespace android.extensions
         {
             return (int)(dp * dencity + 0.5f);
         }
-
     }
 }
