@@ -8,17 +8,23 @@ namespace android.extensions
 {
     public static class TextViewExtensions
     {
-        public static TextView GetTextViewTripListStyle(this Context context, string text, Color background, float dencity, LayoutParams layoutParams = null)
+        public static TextView GetTextViewTripListStyle(this Context context, string text, Color background, float dencity, LayoutParams layoutParams = null, bool isEligible = false, string id = null, float weight = 0.3f)
         {
             var textView = new TextView(context)
             {
                 Text = text,
-                LayoutParameters = layoutParams ?? new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, 0.3f)
+                LayoutParameters = layoutParams ?? new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, weight)
             };
-            textView.SetTextColor(Color.White);
+
+            textView.SetTextColor(isEligible ? Color.OrangeRed : Color.White);
             textView.SetBackgroundColor(background);
             textView.SetPadding(DpToPx(dencity, 20), DpToPx(dencity, 5), DpToPx(dencity, 5), DpToPx(dencity, 5));
             textView.SetTextSize(Android.Util.ComplexUnitType.Dip, 17);
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                textView.Id = id.GetHashCode();
+            }
+
             return textView;
         }
 
@@ -55,6 +61,5 @@ namespace android.extensions
         {
             return (int)(dp * dencity + 0.5f);
         }
-
     }
 }

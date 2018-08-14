@@ -97,7 +97,7 @@ namespace services.abstractions
                 entities = await GetEntitiesFromPersistentCache<T>(relativeUrl);
                 if (entities == null || !entities.Any())
                 {
-                    entities = await GetRemoteAsync<T>(relativeUrl);
+                    entities = await GetAsync<T>(relativeUrl);
                     cacheService.AddEntitiesToPersistentCache<T>(relativeUrl, entities);
                 }
                 cacheService.AddEntitiesToInMemoryCache<T>(relativeUrl, entities);
@@ -106,7 +106,7 @@ namespace services.abstractions
             return entities;
         }
 
-        public async Task<IEnumerable<T>> GetRemoteAsync<T>(string relativeUrl)
+        public async Task<IEnumerable<T>> GetAsync<T>(string relativeUrl)
         {
             return await GetEntitiesFromApiAsync<T>(new Uri(baseUrl, relativeUrl));
         }

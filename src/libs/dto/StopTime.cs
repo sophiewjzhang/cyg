@@ -1,9 +1,6 @@
 ﻿using DTO.Abstractions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DTO
 {
@@ -17,5 +14,6 @@ namespace DTO
         public int PickupType { get; set; }
         public int DropOffType { get; set; }
         public string StopHeadsign { get; set; }
+        public bool? IsEligible { get; set; }
     }
 }

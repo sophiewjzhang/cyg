@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using android.services;
+using dto.Extensions;
 using static Android.App.DatePickerDialog;
 using services.abstractions.Exceptions;
 using services.abstractions;
@@ -21,28 +23,45 @@ namespace android
     [Activity(Label = "Trips")]
     public class TripsActivity : StopSpinnerActivity, IOnDateSetListener
     {
+        #region services
+
         private IRouteDataService routeDataService;
         private ITripDataService tripDataService;
+        private IBrowserService browserService;
+        private IUserSettingsService userSettingsService;
+
+        #endregion
+
+        #region controls
+
         private ImageButton buttonSettings;
         private Spinner spinnerRoute;
         private TextView textViewDate;
         private TextView textViewDate1;
         private TextView textViewException;
         private TextView textViewNoLocation;
-        private IUserSettingsService userSettingsService;
+        private LinearLayout layoutMessageTextView;
+        private LinearLayout messageTextViewYesterday;
+        private LinearLayout messageTextViewNoTrips;
         private DateTime dateSelected;
-        private IList<SpinnerItem> routes;
         private LinearLayout parentLayout;
         private ViewFlipper flipper;
-        private float initialX;
         private TextView currentDateTextView;
-        private bool isFreshMove = false;
         private ImageButton buttonLeft;
         private ImageButton buttonRight;
-        private Tuple<DateTime, DateTime> availableDates;
 
+        #endregion
+
+        #region private members
+
+        private float initialX;
+        private bool isFreshMove = false;
+        private Tuple<DateTime, DateTime> availableDates;
+        private IList<SpinnerItem> routes;
         private Dictionary<string, string> selectedFromCache = new Dictionary<string, string>();
         private Dictionary<string, string> selectedToCache = new Dictionary<string, string>();
+
+        #endregion
 
         protected async override void OnCreate(Bundle savedInstanceState)
         {
@@ -60,6 +79,8 @@ namespace android
             userSettingsService = App.Container.Resolve<IUserSettingsService>();
             routeDataService = App.Container.Resolve<IRouteDataService>();
             tripDataService = App.Container.Resolve<ITripDataService>();
+            browserService = App.Container.Resolve<IBrowserService>();
+            BrowserService.Init(this);
         }
 
         private async void InitControls()
@@ -74,6 +95,9 @@ namespace android
             spinnerRoute = FindViewById<Spinner>(Resource.Id.spinnerRoute);
             textViewException = FindViewById<TextView>(Resource.Id.textViewNoInternet);
             textViewNoLocation = FindViewById<TextView>(Resource.Id.textViewNoLocation);
+            layoutMessageTextView = FindViewById<LinearLayout>(Resource.Id.layoutMessageTextView);
+            messageTextViewYesterday = FindViewById<LinearLayout>(Resource.Id.messageTextViewYesterday);
+            messageTextViewNoTrips = FindViewById<LinearLayout>(Resource.Id.messageTextViewNoTrips);
             buttonLeft = FindViewById<ImageButton>(Resource.Id.buttonLeft);
             buttonRight = FindViewById<ImageButton>(Resource.Id.buttonRight);
 
@@ -143,7 +167,7 @@ namespace android
         {
             ClearTrips();
             HideError<GenericNoConnectionException>();
-            var newValue = routes.FirstOrDefault(x => x.Value == spinnerRoute.SelectedItem.ToString()).Id;
+            var newValue = routes.FirstOrDefault(x => x.Value == spinnerRoute.SelectedItem.ToString())?.Id;
             var from = settings.RouteId == newValue ? settings.From : selectedFromCache.ContainsKey(newValue) ? selectedFromCache[newValue] : "";
             var to = settings.RouteId == newValue ? settings.To : selectedToCache.ContainsKey(newValue) ? selectedToCache[newValue] : "";
             settings.RouteId = newValue;
@@ -153,55 +177,78 @@ namespace android
         private async Task ShowTrips()
         {
             ClearTrips();
+
             var from = settings.From;
             var to = settings.To;
 
             try
             {
-                IEnumerable<TripFromTo> trips;
-                loader.StartAnimation(animation);
-                if (settings.ShowOnlyThreeTrips && dateSelected.Date == DateTime.Now.Date)
-                {
-                    trips = await tripDataService.GetNextThreeTrips(settings.RouteId, dateSelected, from, to);
-                }
-                else
-                {
-                    trips = await tripDataService.GetTripsFromTo(settings.RouteId, dateSelected, from, to);
-                }
-                loader.ClearAnimation();
+                layoutMessageTextView.Visibility = ViewStates.Gone;
+                messageTextViewYesterday.Visibility = ViewStates.Gone;
+                messageTextViewNoTrips.Visibility = ViewStates.Gone;
 
-                parentLayout.RemoveAllViews();
+                loader.StartAnimation(animation);
+                var trips = await tripDataService.GetTripsForADay(settings.RouteId, dateSelected, from, to, settings.ShowOnlyThreeTrips);
+                loader.ClearAnimation();
 
                 if (!trips.Any())
                 {
-                    parentLayout.AddView(this.GetTextViewTripListStyle("No trips for today. Swipe left to see trips for tomorrow.", new Color(0x37, 0x42, 0x32), Resources.DisplayMetrics.Density), new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MatchParent, LinearLayout.LayoutParams.WrapContent));
+                    messageTextViewNoTrips.Visibility = ViewStates.Visible;
+                    return;
                 }
-                else
+
+                var index = 0;
+                foreach (var trip in trips)
                 {
-                    var index = 0;
-                    foreach (var trip in trips)
-                    {
-                        Color backgroundColor = index % 2 == 0 ? new Color(0x37, 0x42, 0x32) : new Color(0x2a, 0x5c, 0x12);
-                        var linearLayout = new LinearLayout(this)
-                        {
-                            LayoutParameters = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FillParent, LinearLayout.LayoutParams.WrapContent),
-                            Orientation = Orientation.Horizontal
-                        };
-                        parentLayout.AddView(linearLayout);
+                    parentLayout.AddTripLayout(trip, index % 2 == 0 ? new Color(0x37, 0x42, 0x32) : new Color(0x2a, 0x5c, 0x12), Resources.DisplayMetrics.Density);
+                    index++;
+                }
 
-                        linearLayout.AddView(this.GetTextViewTripListStyle(trip.From.DepartureTime.ToString("hh':'mm"), backgroundColor, Resources.DisplayMetrics.Density));
-
-                        linearLayout.AddView(this.GetTextViewTripListStyle(trip.To.ArrivalTime.ToString("hh':'mm"), backgroundColor, Resources.DisplayMetrics.Density));
-
-                        linearLayout.AddView(this.GetTextViewTripListStyle(trip.GetTripTimeText(), backgroundColor, Resources.DisplayMetrics.Density));
-
-                        index++;
-                    }
+                if (settings.ShowEligibleTrips)
+                {
+                    RunOnUiThread(() => CheckForEligibleTrips(from, to));
                 }
             }
             catch (Exception ex)
             {
                 ShowError(ex);
+            }
+        }
+
+        private int DpToPx(int dp) => (int)(dp * Resources.DisplayMetrics.Density + 0.5f);
+
+        private async void CheckForEligibleTrips(string from, string to)
+        {
+            var eligibleTrips = await tripDataService.GetEligibleTrips(settings.RouteId, dateSelected, from, to);
+
+            var hasEligibleTrips = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date);
+            layoutMessageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
+
+            var hasEligibleTripsYesterday = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date.AddDays(-1));
+            messageTextViewYesterday.Visibility = hasEligibleTripsYesterday ? ViewStates.Visible : ViewStates.Gone;
+
+            foreach (var eligibleTrip in eligibleTrips)
+            {
+                var layout = FindViewById<LinearLayout>(Math.Abs($"{eligibleTrip.From.TripId}-layout".GetHashCode()));
+                if (layout == null) continue;
+                layout.Click += (s, e) =>
+                {
+                    browserService.OpenServiceGuaranteePage(eligibleTrip, dateSelected,
+                        GetStopNameById(eligibleTrip.From.StopId),
+                        GetStopNameById(eligibleTrip.To.StopId),
+                        settings.PrestoCardNumber);
+                };
+
+                layout.GetChildAt(0).Visibility = ViewStates.Gone;
+                var imageView = new ImageView(this)
+                {
+                    LayoutParameters = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, 0.1f)
+                };
+                layout.RemoveViewAt(0);
+                imageView.SetPadding(DpToPx(15), DpToPx(3), 0, DpToPx(3));
+                imageView.SetMaxHeight(DpToPx(14));
+                imageView.SetImageResource(Resource.Drawable.sharp_monetization_on_24);
+                layout.AddView(imageView, 0);
             }
         }
 

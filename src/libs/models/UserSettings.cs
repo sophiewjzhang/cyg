@@ -9,5 +9,7 @@ namespace models
         public string To { get; set; }
         public bool SwapDirectionBasedOnLocation { get; set; }
         public bool ShowOnlyThreeTrips { get; set; }
+        public bool ShowEligibleTrips { get; set; }
+        public string PrestoCardNumber { get; set; }
     }
 }

@@ -30,6 +30,9 @@ namespace android
         private Button searchButton;
         private TextView textViewException;
         private TextView textViewEnableLocation;
+        private CheckBox checkBoxEligibility;
+        private TextView textViewPrestoCardNumber;
+        private EditText editTextPrestoCardNumber;
         private bool firstRun = true;
         private float initialY;
         private ILocationService locationService;
@@ -44,7 +47,7 @@ namespace android
 
             SetContentView(Resource.Layout.Main);
 
-            base.InitControls(Save, false, useIds: true);
+            InitControls(Save, false, useIds: true);
 
             settings = await userSettingsService.LoadUserSettings();
 
@@ -70,6 +73,25 @@ namespace android
 
             searchButton = FindViewById<Button>(Resource.Id.button1);
             searchButton.Click += async (t, e1) => { await SearchButton_Click(t, e1); };
+
+            textViewPrestoCardNumber = FindViewById<TextView>(Resource.Id.textViewPrestoCardNumber);
+            editTextPrestoCardNumber = FindViewById<EditText>(Resource.Id.editTextPrestoCardNumber);
+            editTextPrestoCardNumber.Text = settings?.PrestoCardNumber ?? string.Empty;
+
+            checkBoxEligibility = FindViewById<CheckBox>(Resource.Id.checkBoxEligibility);
+            checkBoxEligibility.Checked = settings?.ShowEligibleTrips ?? true;
+            if (!checkBoxEligibility.Checked)
+            {
+                textViewPrestoCardNumber.Visibility = ViewStates.Gone;
+                editTextPrestoCardNumber.Visibility = ViewStates.Gone;
+            }
+
+            checkBoxEligibility.Click += (s, e) =>
+            {
+                textViewPrestoCardNumber.Visibility = checkBoxEligibility.Checked ? ViewStates.Visible : ViewStates.Gone;
+                editTextPrestoCardNumber.Visibility = checkBoxEligibility.Checked ? ViewStates.Visible : ViewStates.Gone;
+                
+            };
 
             var extra = Intent.GetStringExtra("action");
             if (settings != null && extra != "edit")
@@ -150,6 +172,8 @@ namespace android
                 From = settings.From,
                 To = settings.To,
                 ShowOnlyThreeTrips = showOnlyThreeCheckbox.Checked,
+                PrestoCardNumber = editTextPrestoCardNumber.Text,
+                ShowEligibleTrips = checkBoxEligibility.Checked,
                 SwapDirectionBasedOnLocation = locationSwitchCheckBox.Checked
             });
         }
@@ -185,4 +209,6 @@ namespace android
         }
     }
 }
+
+
 

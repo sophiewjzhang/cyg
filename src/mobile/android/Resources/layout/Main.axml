@@ -3,34 +3,34 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView xmlns:a="http://schemas.android.com/tools"
+  <TextView xmlns:a="http://schemas.android.com/tools"
+      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:text=""
+      android:background="#ffcccc"
+      android:visibility="gone"
+      android:id="@+id/textViewNoInternet" />
+  <TextView
+      android:text="Select your favorite trip"
+      android:layout_width="match_parent"
+      android:textColor="#ffffff"
+      android:padding="15dp"
+      android:background="#374232"
+      android:layout_height="wrap_content"
+      android:id="@+id/textView0" />
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:background="#c8f3ba"
+      android:paddingRight="20dp"
+      android:layout_height="wrap_content">
+    <Spinner
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text=""
-        android:background="#ffcccc"
-        android:visibility="gone"
-        android:id="@+id/textViewNoInternet" />
-    <TextView
-        android:text="Select your favorite trip"
-        android:layout_width="match_parent"
-        android:textColor="#ffffff"
-        android:padding="15dp"
-        android:background="#374232"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView0" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:background="#c8f3ba"
-        android:paddingRight="20dp"
-        android:layout_height="wrap_content">
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:backgroundTint="@android:color/black"
-            android:id="@+id/spinnerRoute" />
-    </RelativeLayout>
-  
+        android:paddingLeft="20dp"
+        android:backgroundTint="@android:color/black"
+        android:id="@+id/spinnerRoute" />
+  </RelativeLayout>
+
   <include layout="@layout/StopSpinners"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
@@ -41,22 +41,54 @@
         android:background="#2a5c12"
         android:id="@+id/loader"
         android:visibility="invisible" />
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp">
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:backgroundTint="@android:color/black"
         android:id="@+id/radioGroup">
-        <RadioButton
-            android:id="@+id/radioButton1"
-            android:checked="true"
-            android:buttonTint="#374232"
-            android:text="Show next three trips for today" />
-        <RadioButton
-            android:id="@+id/radioButton2"
-            android:buttonTint="#374232"
-            android:text="Show all trips for the day" />
+      <RadioButton
+          android:id="@+id/radioButton1"
+          android:checked="true"
+          android:buttonTint="#374232"
+          android:text="Show next three trips for today" />
+      <RadioButton
+          android:id="@+id/radioButton2"
+          android:buttonTint="#374232"
+          android:text="Show all trips for the day" />
     </RadioGroup>
+    <CheckBox
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:checked="true"
+      android:buttonTint="#374232"
+      android:layout_marginTop="20dp"
+      android:id="@+id/checkBoxEligibility"
+      android:text="Check trips eligible for return" />
+    <TextView xmlns:a="http://schemas.android.com/tools"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:text="Presto card number:"
+              android:layout_marginLeft="6dp"
+              android:id="@+id/textViewPrestoCardNumber" />
+    <EditText
+      android:layout_width="match_parent"
+      android:layout_marginTop="0dp"
+      android:paddingTop="0dp"
+      android:layout_height="wrap_content"
+      android:inputType="number"
+      android:textSize="14dp"
+      android:id="@+id/editTextPrestoCardNumber"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
+    />
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,21 +97,20 @@
         android:layout_marginTop="20dp"
         android:id="@+id/checkBox1"
         android:text="Swap direction based on my location" />
-  <TextView xmlns:a="http://schemas.android.com/tools"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="Please enable location service and restart application"
-            android:visibility="gone"
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:id="@+id/textViewEnableLocation" />
-    <Button
-        android:text="Show trips"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_height="wrap_content"
-        android:background="#374232"
-        android:textColor="#ffffff"
-        android:id="@+id/button1" />
+    <TextView xmlns:a="http://schemas.android.com/tools"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:layout_marginLeft="6dp"
+              android:text="Please enable location service and restart application"
+              android:visibility="gone"
+              android:id="@+id/textViewEnableLocation" />
+  </LinearLayout>
+  <Button
+      android:text="Show trips"
+      android:layout_width="match_parent"
+      android:layout_marginTop="20dp"
+      android:layout_height="wrap_content"
+      android:background="#374232"
+      android:textColor="#ffffff"
+      android:id="@+id/button1" />
 </LinearLayout>
