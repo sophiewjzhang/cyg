@@ -219,36 +219,42 @@ namespace android
 
         private async void CheckForEligibleTrips(string from, string to)
         {
-            var eligibleTrips = await tripDataService.GetEligibleTrips(settings.RouteId, dateSelected, from, to);
-
-            var hasEligibleTrips = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date);
-            layoutMessageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
-
-            var hasEligibleTripsYesterday = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date.AddDays(-1));
-            messageTextViewYesterday.Visibility = hasEligibleTripsYesterday ? ViewStates.Visible : ViewStates.Gone;
-
-            foreach (var eligibleTrip in eligibleTrips)
+            try
             {
-                var layout = FindViewById<LinearLayout>(Math.Abs($"{eligibleTrip.From.TripId}-layout".GetHashCode()));
-                if (layout == null) continue;
-                layout.Click += (s, e) =>
-                {
-                    browserService.OpenServiceGuaranteePage(eligibleTrip, dateSelected,
-                        GetStopNameById(eligibleTrip.From.StopId),
-                        GetStopNameById(eligibleTrip.To.StopId),
-                        settings.PrestoCardNumber);
-                };
+                var eligibleTrips = await tripDataService.GetEligibleTrips(settings.RouteId, dateSelected, from, to);
 
-                layout.GetChildAt(0).Visibility = ViewStates.Gone;
-                var imageView = new ImageView(this)
+                var hasEligibleTrips = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date);
+                layoutMessageTextView.Visibility = hasEligibleTrips ? ViewStates.Visible : ViewStates.Gone;
+
+                var hasEligibleTripsYesterday = eligibleTrips.Any(x => x.GetDate() == dateSelected.Date.AddDays(-1));
+                messageTextViewYesterday.Visibility = hasEligibleTripsYesterday ? ViewStates.Visible : ViewStates.Gone;
+
+                foreach (var eligibleTrip in eligibleTrips)
                 {
-                    LayoutParameters = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, 0.1f)
-                };
-                layout.RemoveViewAt(0);
-                imageView.SetPadding(DpToPx(15), DpToPx(3), 0, DpToPx(3));
-                imageView.SetMaxHeight(DpToPx(14));
-                imageView.SetImageResource(Resource.Drawable.sharp_monetization_on_24);
-                layout.AddView(imageView, 0);
+                    var layout = FindViewById<LinearLayout>(Math.Abs($"{eligibleTrip.From.TripId}-layout".GetHashCode()));
+                    if (layout == null) continue;
+                    layout.Click += (s, e) =>
+                    {
+                        browserService.OpenServiceGuaranteePage(eligibleTrip, dateSelected,
+                            GetStopNameById(eligibleTrip.From.StopId),
+                            GetStopNameById(eligibleTrip.To.StopId),
+                            settings.PrestoCardNumber);
+                    };
+
+                    layout.GetChildAt(0).Visibility = ViewStates.Gone;
+                    var imageView = new ImageView(this)
+                    {
+                        LayoutParameters = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MatchParent, 0.1f)
+                    };
+                    layout.RemoveViewAt(0);
+                    imageView.SetPadding(DpToPx(15), DpToPx(3), 0, DpToPx(3));
+                    imageView.SetMaxHeight(DpToPx(14));
+                    imageView.SetImageResource(Resource.Drawable.sharp_monetization_on_24);
+                    layout.AddView(imageView, 0);
+                }
+            }
+            catch (Exception e)
+            {
             }
         }
 
