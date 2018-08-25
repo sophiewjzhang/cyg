@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using api.Controllers;
+using dal;
+using dal.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using api.Configuration;
-using dal.Abstractions;
-using dal;
+using System;
+using System.Threading.Tasks;
 
 namespace api
 {
@@ -24,9 +21,10 @@ namespace api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public async void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddMemoryCache();
 
             var connectionString = Configuration.GetConnectionString("Api");
             services.AddTransient<IStopRepository, StopRepository>(x => new StopRepository(connectionString));
@@ -35,14 +33,19 @@ namespace api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, IRouteRepository routeRepository, IStopRepository stopRepository, IMemoryCache cache)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseMvc();
+            var routes = await routeRepository.GetTrainRoutes();
+            foreach (var route in routes)
+            {
+                var stops = await stopRepository.GetStopsByRoute(route.RouteId);
+                cache.Set(route.RouteId, stops, TimeSpan.FromDays(90));
+            }
         }
     }
 }
