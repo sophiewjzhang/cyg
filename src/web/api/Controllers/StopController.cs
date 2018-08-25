@@ -1,5 +1,9 @@
 ﻿using dal.Abstractions;
+using DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace api.Controllers
@@ -8,10 +12,12 @@ namespace api.Controllers
     public class StopController : Controller
     {
         private IStopRepository stopRepository;
+        private IMemoryCache cache;
 
-        public StopController(IStopRepository stopRepository)
+        public StopController(IStopRepository stopRepository, IMemoryCache cache)
         {
             this.stopRepository = stopRepository;
+            this.cache = cache;
         }
 
         [ResponseCache()]
@@ -24,8 +30,15 @@ namespace api.Controllers
         [HttpGet("{routeId}")]
         public async Task<IActionResult> ByRoute(string routeId)
         {
-            var result = await stopRepository.GetStopsByRoute(routeId);
-            return Ok(result);
+            if (cache.TryGetValue(routeId, out IEnumerable<Stop> stops))
+            {
+                return Ok(stops);
+            }
+
+            stops = await stopRepository.GetStopsByRoute(routeId);
+            cache.Set(routeId, stops, TimeSpan.FromDays(90));
+
+            return Ok(stops);
         }
     }
 }

@@ -83,13 +83,11 @@ order by st1.ArrivalTime ASC", (from, to) => new TripFromTo
                 return await connection.QueryAsync<StopTime, StopTime, TripFromTo>(@"select st1.*, st2.* from trips t
 inner join stoptimes st1 on st1.tripid = t.tripid
 inner join stoptimes st2 on st2.tripid = t.tripid
-inner join routes r on r.routeid = t.RouteId
 where serviceid = @date
 and st1.stopid = @fromId
 and st2.stopid = @toId
 and st1.StopSequence < st2.StopSequence
-and r.routetype = 2
-and r.routeid like '%-' + @routeId
+and t.tripid like '%-' + @routeId + '-%'
 order by st1.ArrivalTime ASC", (from, to) => new TripFromTo
                 {
                     From = from,
