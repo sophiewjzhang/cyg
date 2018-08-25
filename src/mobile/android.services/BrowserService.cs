@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using dto.Extensions;
 using Android.Widget;
 using Android.Views;
+using System.Globalization;
 
 namespace android.services
 {
@@ -42,7 +43,7 @@ namespace android.services
             toast.SetGravity(GravityFlags.Center, 0, 0);
             toast.Show();
 
-            var url = $"{ serviceGuaranteeUrl }?TripNo={trip.GetTripShortId()}&DPTStn={from}&DPTStnID={trip.From.StopId}&ARVStn={to}&ARVStnID={trip.To.StopId}&Date={ dateTime:MM/dd/yyyy}&Time={trip.From.DepartureTime.Hours}:{trip.From.DepartureTime.Minutes}";
+            var url = $"{ serviceGuaranteeUrl }?TripNo={trip.GetTripShortId()}&DPTStn={from}&DPTStnID={trip.From.StopId}&ARVStn={to}&ARVStnID={trip.To.StopId}&Date={ dateTime.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) }&Time={trip.From.DepartureTime.Hours.ToString().PadLeft(2, '0')}:{trip.From.DepartureTime.Minutes.ToString().PadLeft(2, '0')}";
             var uri = Android.Net.Uri.Parse(url);
 
             var browserIntent = new Intent(Intent.ActionView, uri);

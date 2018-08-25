@@ -121,7 +121,6 @@ namespace android
             }
             catch (Exception ex)
             {
-                ShowError(ex);
             }
         }
 
